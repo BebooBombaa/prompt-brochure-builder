@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <title>مولّد برومبت البروشور 3D</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      background: #111827;
+      color: #e5e7eb;
+      margin: 0;
+      padding: 20px;
+    }
+    h1, h2 {
+      color: #fbbf24;
+    }
+    label {
+      display: block;
+      margin-top: 10px;
+      font-weight: bold;
+    }
+    input[type="text"], textarea, select {
+      width: 100%;
+      padding: 8px;
+      margin-top: 4px;
+      border-radius: 4px;
+      border: 1px solid #4b5563;
+      background: #020617;
+      color: #e5e7eb;
+    }
+    textarea {
+      min-height: 60px;
+    }
+    .panel {
+      border: 1px solid #374151;
+      padding: 15px;
+      margin-top: 15px;
+      border-radius: 8px;
+      background: #0b1120;
+    }
+    button {
+      margin-top: 20px;
+      padding: 10px 20px;
+      background: #10b981;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+    button:hover {
+      background: #059669;
+    }
+    #output {
+      margin-top: 20px;
+    }
+    #promptResult {
+      width: 100%;
+      min-height: 250px;
+      padding: 10px;
+      border-radius: 8px;
+      border: 1px solid #4b5563;
+      background: #020617;
+      color: #e5e7eb;
+      white-space: pre-wrap;
+    }
+    #copyBtn {
+      background: #3b82f6;
+      margin-right: 10px;
+    }
+    #copyBtn:hover {
+      background: #2563eb;
+    }
+    #copyStatus {
+      margin-right: 10px;
+      font-size: 14px;
+      color: #A5B4FC;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>مولّد برومبت بروشور 3D</h1>
+  <p>املأ الحقول ثم اضغط "توليد البرومبت" لتحصل على نص جاهز للاستخدام في Gemini أو ChatGPT أو أي مولِّد صور.</p>
+
+  <!-- معلومات عامة -->
+  <div class="panel">
+    <h2>١) معلومات عامة عن الموضوع</h2>
+    <label>عنوان الموضوع (مثال: شَبَكَاتُ الْحَاسِبِ الآلِيِّ لِلصَّفِّ الْأَوَّلِ الثَّانَوِيِّ)</label>
+    <input type="text" id="topic" />
+
+    <label>الفئة المستهدفة (students / children / professionals ...)</label>
+    <input type="text" id="audience" value="students" />
+  </div>
+
+  <!-- اللوحة 1 -->
+  <div class="panel">
+    <h2>٢) اللوحة ١ - الغلاف والمقدمة</h2>
+    <label>العنوان الرئيسي بالعربية مع التشكيل إن أمكن</label>
+    <input type="text" id="p1_title" />
+
+    <label>العنوان الفرعي بالعربية</label>
+    <input type="text" id="p1_subtitle" />
+
+    <label>فقرة المقدمة بالعربية (شرح قصير للموضوع)</label>
+    <textarea id="p1_intro"></textarea>
+
+    <label>تعليق قصير تحت صورة الغلاف (Caption)</label>
+    <textarea id="p1_caption"></textarea>
+  </div>
+
+  <!-- اللوحة 2 -->
+  <div class="panel">
+    <h2>٣) اللوحة ٢ - المفاهيم الرئيسية</h2>
+    <p>يمكنك إدخال حتى 3 مفاهيم رئيسية.</p>
+
+    <label>العنوان ١</label>
+    <input type="text" id="c1_title" />
+    <label>الشرح ١</label>
+    <textarea id="c1_desc"></textarea>
+
+    <label>العنوان ٢</label>
+    <input type="text" id="c2_title" />
+    <label>الشرح ٢</label>
+    <textarea id="c2_desc"></textarea>
+
+    <label>العنوان ٣ (اختياري)</label>
+    <input type="text" id="c3_title" />
+    <label>الشرح ٣ (اختياري)</label>
+    <textarea id="c3_desc"></textarea>
+  </div>
+
+  <!-- اللوحة 3 -->
+  <div class="panel">
+    <h2>٤) اللوحة ٣ - أمثلة وشروح مرئية</h2>
+    <p>اكتب وصف المشهد بالإنجليزية ليساعد نموذج الصور، والتعليق بالعربية.</p>
+
+    <label>عنوان المثال ١ بالعربية</label>
+    <input type="text" id="e1_title" />
+    <label>وصف المشهد ١ بالإنجليزية</label>
+    <textarea id="e1_visual"></textarea>
+    <label>تعليق المثال ١ بالعربية (Caption)</label>
+    <textarea id="e1_caption"></textarea>
+
+    <label>عنوان المثال ٢ بالعربية (اختياري)</label>
+    <input type="text" id="e2_title" />
+    <label>وصف المشهد ٢ بالإنجليزية (اختياري)</label>
+    <textarea id="e2_visual"></textarea>
+    <label>تعليق المثال ٢ بالعربية (اختياري)</label>
+    <textarea id="e2_caption"></textarea>
+  </div>
+
+  <!-- اللوحة 4 -->
+  <div class="panel">
+    <h2>٥) اللوحة ٤ - الملخص والنقاط</h2>
+    <label>عنوان قسم الملخص بالعربية</label>
+    <input type="text" id="p4_heading" />
+
+    <label>النقطة ١</label>
+    <input type="text" id="b1" />
+    <label>النقطة ٢</label>
+    <input type="text" id="b2" />
+    <label>النقطة ٣ (اختياري)</label>
+    <input type="text" id="b3" />
+    <label>النقطة ٤ (اختياري)</label>
+    <input type="text" id="b4" />
+  </div>
+
+  <!-- التوقيع -->
+  <div class="panel">
+    <h2>٦) التوقيع</h2>
+    <label>الاسم بالعربية (يظهر كتوقيع زخرفي)</label>
+    <input type="text" id="signature" value="باسم السيد" />
+  </div>
+
+  <button onclick="generatePrompt()">توليد البرومبت</button>
+
+  <div id="output">
+    <h2>البرومبت النهائي</h2>
+    <button id="copyBtn" onclick="copyPrompt()">نسخ البرومبت</button>
+    <span id="copyStatus"></span>
+    <textarea id="promptResult" readonly></textarea>
+  </div>
+
+  <script>
+    function generatePrompt() {
+      const topic = document.getElementById('topic').value || "الموضوع";
+      const audience = document.getElementById('audience').value || "students";
+
+      const p1_title = document.getElementById('p1_title').value;
+      const p1_subtitle = document.getElementById('p1_subtitle').value;
+      const p1_intro = document.getElementById('p1_intro').value;
+      const p1_caption = document.getElementById('p1_caption').value;
+
+      const c1_title = document.getElementById('c1_title').value;
+      const c1_desc = document.getElementById('c1_desc').value;
+      const c2_title = document.getElementById('c2_title').value;
+      const c2_desc = document.getElementById('c2_desc').value;
+      const c3_title = document.getElementById('c3_title').value;
+      const c3_desc = document.getElementById('c3_desc').value;
+
+      const e1_title = document.getElementById('e1_title').value;
+      const e1_visual = document.getElementById('e1_visual').value;
+      const e1_caption = document.getElementById('e1_caption').value;
+
+      const e2_title = document.getElementById('e2_title').value;
+      const e2_visual = document.getElementById('e2_visual').value;
+      const e2_caption = document.getElementById('e2_caption').value;
+
+      const p4_heading = document.getElementById('p4_heading').value;
+      const b1 = document.getElementById('b1').value;
+      const b2 = document.getElementById('b2').value;
+      const b3 = document.getElementById('b3').value;
+      const b4 = document.getElementById('b4').value;
+
+      const signature = document.getElementById('signature').value;
+
+      let conceptsText = "";
+      if (c1_title && c1_desc) {
+        conceptsText += `1) Concept\n- Arabic title:\n  "${c1_title}"\n- Arabic description:\n  "${c1_desc}"\n\n`;
+      }
+      if (c2_title && c2_desc) {
+        conceptsText += `2) Concept\n- Arabic title:\n  "${c2_title}"\n- Arabic description:\n  "${c2_desc}"\n\n`;
+      }
+      if (c3_title && c3_desc) {
+        conceptsText += `3) Concept\n- Arabic title:\n  "${c3_title}"\n- Arabic description:\n  "${c3_desc}"\n\n`;
+      }
+
+      let examplesText = "";
+      if (e1_title && e1_visual && e1_caption) {
+        examplesText += `Example 1:\n- Arabic example title:\n  "${e1_title}"\n- 3D scene description:\n  ${e1_visual}\n- Arabic caption:\n  "${e1_caption}"\n\n`;
+      }
+      if (e2_title && e2_visual && e2_caption) {
+        examplesText += `Example 2:\n- Arabic example title:\n  "${e2_title}"\n- 3D scene description:\n  ${e2_visual}\n- Arabic caption:\n  "${e2_caption}"\n\n`;
+      }
+
+      let bulletsText = "";
+      if (b1) bulletsText += `  - "${b1}"\n`;
+      if (b2) bulletsText += `  - "${b2}"\n`;
+      if (b3) bulletsText += `  - "${b3}"\n`;
+      if (b4) bulletsText += `  - "${b4}"\n`;
+
+      const prompt = `Act as a top-tier prompt engineer and 3D infographic designer.
+
+TASK:
+Create a 3D tri-fold (four-panel) infographic brochure with a modern, immersive, and high-quality visual style about the topic:
+"${topic}".
+
+LANGUAGE & TEXT:
+- All written content on the brochure must be in formal Arabic (الفصحى) with full diacritics.
+- Use the exact Arabic text provided for each panel below and render it clearly and beautifully.
+
+DESIGN STYLE:
+- Use a dark base background (deep navy blue blended with dark grey).
+- This is an educational topic, so use a bright, cheerful color palette (bright blues, greens, warm orange accents) with strong contrast and readability.
+- Apply soft, consistent lighting, gentle shadows, and clear 3D depth.
+- Use Pixar-style 3D characters, friendly and expressive, suitable for "${audience}".
+
+GLOBAL LAYOUT:
+- 3D tri-fold brochure, 4 panels, print-ready, high resolution.
+- Clean layout, good spacing, clear visual hierarchy.
+
+PANEL 1: COVER / INTRODUCTION
+- Place a Pixar-style 3D character suitable for the topic and audience, holding a pen or pointer, gesturing toward the brochure content.
+- Arabic main title:
+  "${p1_title}"
+- Arabic subtitle:
+  "${p1_subtitle}"
+- Introductory Arabic paragraph:
+  "${p1_intro}"
+- Background: 3D icons and shapes relevant to the topic.
+- Arabic caption under the main image:
+  "${p1_caption}"
+
+PANEL 2: MAIN CONCEPTS
+Create a clean layout with small section headings and short Arabic explanations. For each concept:
+
+${conceptsText}PANEL 3: EXAMPLES & VISUAL EXPLANATIONS
+Use practical visual scenes to illustrate the topic. For each example, create a 3D scene and place the Arabic caption under the image:
+
+${examplesText}PANEL 4: SUMMARY / KEY TAKEAWAYS
+- Arabic heading:
+  "${p4_heading}"
+- Bulleted Arabic summary points:
+${bulletsText}
+SIGNATURE:
+- At the bottom of the back panel, add a decorative Arabic signature:
+  "${signature}"
+- Style: elegant Arabic calligraphy matching the brochure’s colors.
+
+OUTPUT:
+- High-resolution 3D image.
+- 3D perspective showing the tri-fold brochure with all four panels visible.
+- Maintain consistent lighting, colors, and Pixar-style 3D characters across all panels.`;
+
+      document.getElementById('promptResult').value = prompt;
+      document.getElementById('copyStatus').textContent = "";
+    }
+
+    async function copyPrompt() {
+      const textArea = document.getElementById('promptResult');
+      const status = document.getElementById('copyStatus');
+      const text = textArea.value.trim();
+
+      if (!text) {
+        status.textContent = "لا يوجد برومبت لنسخه. ولّد البرومبت أولاً.";
+        return;
+      }
+
+      try {
+        await navigator.clipboard.writeText(text);
+        status.textContent = "تم نسخ البرومبت إلى الحافظة ✔";
+      } catch (err) {
+        status.textContent = "تعذّر النسخ تلقائيًا، انسخ يدويًا (Ctrl+C).";
+      }
+    }
+  </script>
+
+</body>
+</html>
