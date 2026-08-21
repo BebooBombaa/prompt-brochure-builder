@@ -2,249 +2,1278 @@
 <html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8">
-  <title>مولّد برومبت البروشور 3D</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>مولّد برومبت البروشور 3D المحسَّن</title>
   <style>
-    body {
-      font-family: sans-serif;
-      background: #111827;
-      color: #e5e7eb;
+    /* ====== CSS Variables & Design Tokens ====== */
+    :root {
+      --bg-primary: #0f172a;
+      --bg-secondary: #1e293b;
+      --bg-card: #1e293b;
+      --text-primary: #f1f5f9;
+      --text-secondary: #94a3b8;
+      --accent-primary: #10b981;
+      --accent-secondary: #3b82f6;
+      --accent-warning: #f59e0b;
+      --border-color: #334155;
+      --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
+      --radius: 12px;
+      --transition: all 0.3s ease;
+    }
+
+    * {
+      box-sizing: border-box;
       margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, var(--bg-primary) 0%, #1a1a2e 100%);
+      color: var(--text-primary);
+      min-height: 100vh;
+      line-height: 1.6;
+    }
+
+    /* ====== Header ====== */
+    .header {
+      background: rgba(30, 41, 59, 0.8);
+      backdrop-filter: blur(10px);
       padding: 20px;
+      text-align: center;
+      border-bottom: 1px solid var(--border-color);
+      position: sticky;
+      top: 0;
+      z-index: 100;
     }
-    h1, h2 {
-      color: #fbbf24;
+
+    .header h1 {
+      color: var(--accent-warning);
+      font-size: 1.8rem;
+      margin-bottom: 8px;
     }
-    label {
-      display: block;
-      margin-top: 10px;
+
+    .header p {
+      color: var(--text-secondary);
+      font-size: 0.95rem;
+    }
+
+    /* ====== Progress Bar ====== */
+    .progress-container {
+      max-width: 800px;
+      margin: 20px auto;
+      padding: 0 20px;
+    }
+
+    .progress-bar {
+      display: flex;
+      justify-content: space-between;
+      position: relative;
+      margin-bottom: 20px;
+    }
+
+    .progress-bar::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: var(--border-color);
+      transform: translateY(-50%);
+      z-index: 1;
+    }
+
+    .progress-line {
+      position: absolute;
+      top: 50%;
+      left: 0;
+      height: 3px;
+      background: var(--accent-primary);
+      transform: translateY(-50%);
+      z-index: 2;
+      transition: width 0.5s ease;
+    }
+
+    .step {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      position: relative;
+      z-index: 3;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .step-number {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: var(--bg-secondary);
+      border: 3px solid var(--border-color);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      font-size: 14px;
+      transition: var(--transition);
+    }
+
+    .step.active .step-number {
+      background: var(--accent-primary);
+      border-color: var(--accent-primary);
+      color: white;
+      transform: scale(1.1);
+    }
+
+    .step.completed .step-number {
+      background: var(--accent-primary);
+      border-color: var(--accent-primary);
+      color: white;
+    }
+
+    .step-label {
+      font-size: 12px;
+      margin-top: 6px;
+      color: var(--text-secondary);
+      white-space: nowrap;
+    }
+
+    .step.active .step-label {
+      color: var(--accent-primary);
       font-weight: bold;
     }
-    input[type="text"], textarea, select {
-      width: 100%;
-      padding: 8px;
-      margin-top: 4px;
-      border-radius: 4px;
-      border: 1px solid #4b5563;
-      background: #020617;
-      color: #e5e7eb;
+
+    /* ====== Main Container ====== */
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 20px;
     }
-    textarea {
-      min-height: 60px;
-    }
+
+    /* ====== Panel/Card Styles ====== */
     .panel {
-      border: 1px solid #374151;
-      padding: 15px;
-      margin-top: 15px;
-      border-radius: 8px;
-      background: #0b1120;
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius);
+      padding: 24px;
+      margin-bottom: 20px;
+      box-shadow: var(--shadow);
+      animation: fadeIn 0.4s ease;
     }
-    button {
-      margin-top: 20px;
-      padding: 10px 20px;
-      background: #10b981;
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .panel h2 {
+      color: var(--accent-warning);
+      font-size: 1.4rem;
+      margin-bottom: 16px;
+      padding-bottom: 10px;
+      border-bottom: 2px solid var(--border-color);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .panel h2::before {
+      content: '📋';
+    }
+
+    /* ====== Form Elements ====== */
+    .form-group {
+      margin-bottom: 18px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 6px;
+      font-weight: 600;
+      color: var(--text-primary);
+      font-size: 0.95rem;
+    }
+
+    label .optional {
+      color: var(--text-secondary);
+      font-weight: normal;
+      font-size: 0.85rem;
+    }
+
+    input[type="text"],
+    textarea,
+    select {
+      width: 100%;
+      padding: 12px 16px;
+      border: 2px solid var(--border-color);
+      border-radius: 8px;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      font-size: 1rem;
+      font-family: inherit;
+      transition: var(--transition);
+    }
+
+    input[type="text"]:focus,
+    textarea:focus,
+    select:focus {
+      outline: none;
+      border-color: var(--accent-primary);
+      box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2);
+    }
+
+    textarea {
+      min-height: 80px;
+      resize: vertical;
+    }
+
+    textarea::placeholder,
+    input::placeholder {
+      color: var(--text-secondary);
+      opacity: 0.7;
+    }
+
+    /* ====== Concept & Example Cards ====== */
+    .repeatable-group {
+      background: rgba(15, 23, 42, 0.5);
+      border: 1px dashed var(--border-color);
+      border-radius: 8px;
+      padding: 16px;
+      margin-bottom: 16px;
+      position: relative;
+    }
+
+    .repeatable-group .group-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .group-title {
+      font-weight: bold;
+      color: var(--accent-secondary);
+    }
+
+    .btn-remove {
+      background: #ef4444;
       color: white;
       border: none;
-      border-radius: 4px;
+      padding: 4px 12px;
+      border-radius: 6px;
       cursor: pointer;
-      font-size: 16px;
+      font-size: 12px;
+      transition: var(--transition);
     }
-    button:hover {
-      background: #059669;
+
+    .btn-remove:hover {
+      background: #dc2626;
     }
-    #output {
-      margin-top: 20px;
-    }
-    #promptResult {
-      width: 100%;
-      min-height: 250px;
-      padding: 10px;
+
+    .btn-add {
+      background: var(--accent-secondary);
+      color: white;
+      border: none;
+      padding: 10px 20px;
       border-radius: 8px;
-      border: 1px solid #4b5563;
-      background: #020617;
-      color: #e5e7eb;
-      white-space: pre-wrap;
+      cursor: pointer;
+      font-size: 14px;
+      margin-top: 10px;
+      transition: var(--transition);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
     }
-    #copyBtn {
-      background: #3b82f6;
-      margin-right: 10px;
-    }
-    #copyBtn:hover {
+
+    .btn-add:hover {
       background: #2563eb;
     }
-    #copyStatus {
-      margin-right: 10px;
+
+    /* ====== Buttons ====== */
+    .btn-group {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-top: 24px;
+    }
+
+    .btn {
+      padding: 12px 28px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 16px;
+      font-weight: 600;
+      transition: var(--transition);
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn-primary {
+      background: var(--accent-primary);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background: #059669;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4);
+    }
+
+    .btn-secondary {
+      background: var(--accent-secondary);
+      color: white;
+    }
+
+    .btn-secondary:hover {
+      background: #2563eb;
+      transform: translateY(-2px);
+    }
+
+    .btn-outline {
+      background: transparent;
+      border: 2px solid var(--border-color);
+      color: var(--text-primary);
+    }
+
+    .btn-outline:hover {
+      border-color: var(--accent-primary);
+      color: var(--accent-primary);
+    }
+
+    /* ====== Output Section ====== */
+    .output-section {
+      background: var(--bg-card);
+      border: 2px solid var(--accent-primary);
+      border-radius: var(--radius);
+      padding: 24px;
+      margin-top: 30px;
+      animation: slideUp 0.5s ease;
+    }
+
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(40px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .output-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .output-header h2 {
+      color: var(--accent-primary);
+      margin: 0;
+      border: none;
+      padding: 0;
+    }
+
+    .output-actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    #promptResult {
+      width: 100%;
+      min-height: 300px;
+      max-height: 500px;
+      padding: 16px;
+      border: 2px solid var(--border-color);
+      border-radius: 8px;
+      background: var(--bg-primary);
+      color: #a5f3fc;
+      font-family: 'Consolas', 'Monaco', monospace;
+      font-size: 13px;
+      line-height: 1.7;
+      white-space: pre-wrap;
+      word-wrap: break-word;
+      overflow-y: auto;
+    }
+
+    /* ====== Status Messages ====== */
+    .status-message {
+      padding: 10px 16px;
+      border-radius: 8px;
       font-size: 14px;
-      color: #A5B4FC;
+      margin-top: 12px;
+      display: none;
+    }
+
+    .status-success {
+      background: rgba(16, 185, 129, 0.2);
+      color: #34d399;
+      border: 1px solid #34d399;
+      display: block;
+    }
+
+    .status-error {
+      background: rgba(239, 68, 68, 0.2);
+      color: #f87171;
+      border: 1px solid #f87171;
+      display: block;
+    }
+
+    .status-info {
+      background: rgba(59, 130, 246, 0.2);
+      color: #60a5fa;
+      border: 1px solid #60a5fa;
+      display: block;
+    }
+
+    /* ====== Templates Section ====== */
+    .templates-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 12px;
+      margin-top: 16px;
+    }
+
+    .template-card {
+      background: var(--bg-primary);
+      border: 2px solid var(--border-color);
+      border-radius: 8px;
+      padding: 16px;
+      cursor: pointer;
+      transition: var(--transition);
+      text-align: center;
+    }
+
+    .template-card:hover {
+      border-color: var(--accent-primary);
+      transform: translateY(-3px);
+    }
+
+    .template-icon {
+      font-size: 2rem;
+      margin-bottom: 8px;
+    }
+
+    .template-name {
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    .template-desc {
+      font-size: 12px;
+      color: var(--text-secondary);
+      margin-top: 4px;
+    }
+
+    /* ====== History Sidebar ====== */
+    .history-toggle {
+      position: fixed;
+      left: 20px;
+      bottom: 20px;
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      background: var(--accent-secondary);
+      color: white;
+      border: none;
+      cursor: pointer;
+      font-size: 24px;
+      box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
+      transition: var(--transition);
+      z-index: 1000;
+    }
+
+    .history-toggle:hover {
+      transform: scale(1.1);
+    }
+
+    .history-panel {
+      position: fixed;
+      left: -350px;
+      top: 0;
+      bottom: 0;
+      width: 340px;
+      background: var(--bg-secondary);
+      box-shadow: 4px 0 20px rgba(0, 0, 0, 0.5);
+      transition: left 0.3s ease;
+      z-index: 999;
+      overflow-y: auto;
+      padding: 20px;
+    }
+
+    .history-panel.open {
+      left: 0;
+    }
+
+    .history-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.5);
+      display: none;
+      z-index: 998;
+    }
+
+    .history-overlay.show {
+      display: block;
+    }
+
+    .history-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .history-item {
+      background: var(--bg-primary);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 12px;
+      margin-bottom: 10px;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .history-item:hover {
+      border-color: var(--accent-primary);
+    }
+
+    .history-item-title {
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 4px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .history-item-date {
+      font-size: 12px;
+      color: var(--text-secondary);
+    }
+
+    /* ====== Auto-save Indicator ====== */
+    .auto-save-indicator {
+      position: fixed;
+      top: 80px;
+      left: 20px;
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 8px 16px;
+      font-size: 13px;
+      color: var(--text-secondary);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .auto-save-indicator.show {
+      opacity: 1;
+    }
+
+    .save-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--accent-primary);
+      animation: pulse 1.5s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.4; }
+    }
+
+    /* ====== Responsive Design ====== */
+    @media (max-width: 768px) {
+      .header h1 {
+        font-size: 1.4rem;
+      }
+
+      .step-label {
+        display: none;
+      }
+
+      .step-number {
+        width: 30px;
+        height: 30px;
+        font-size: 12px;
+      }
+
+      .panel {
+        padding: 16px;
+      }
+
+      .btn {
+        padding: 10px 20px;
+        font-size: 14px;
+      }
+
+      .output-header {
+        flex-direction: column;
+        align-items: stretch;
+      }
+    }
+
+    /* ====== Hidden Class ====== */
+    .hidden {
+      display: none !important;
+    }
+
+    /* ====== Scrollbar Styling ====== */
+    ::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: var(--bg-primary);
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: var(--border-color);
+      border-radius: 4px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: var(--text-secondary);
     }
   </style>
 </head>
 <body>
 
-  <h1>مولّد برومبت بروشور 3D</h1>
-  <p>املأ الحقول ثم اضغط "توليد البرومبت" لتحصل على نص جاهز للاستخدام في Gemini أو ChatGPT أو أي مولِّد صور.</p>
+  <!-- Header -->
+  <header class="header">
+    <h1>🎨 مولّد برومبت البروشور 3D المحسَّن</h1>
+    <p>أنشئ برومبت احترافي لتوليد بروشورات 3D تعليمية مذهلة</p>
+  </header>
 
-  <!-- معلومات عامة -->
-  <div class="panel">
-    <h2>١) معلومات عامة عن الموضوع</h2>
-    <label>عنوان الموضوع (مثال: شَبَكَاتُ الْحَاسِبِ الآلِيِّ لِلصَّفِّ الْأَوَّلِ الثَّانَوِيِّ)</label>
-    <input type="text" id="topic" />
-
-    <label>الفئة المستهدفة (students / children / professionals ...)</label>
-    <input type="text" id="audience" value="students" />
+  <!-- Progress Bar -->
+  <div class="progress-container">
+    <div class="progress-bar">
+      <div class="progress-line" id="progressLine"></div>
+      <div class="step active" data-step="1" onclick="goToStep(1)">
+        <div class="step-number">1</div>
+        <div class="step-label">المعلومات</div>
+      </div>
+      <div class="step" data-step="2" onclick="goToStep(2)">
+        <div class="step-number">2</div>
+        <div class="step-label">الغلاف</div>
+      </div>
+      <div class="step" data-step="3" onclick="goToStep(3)">
+        <div class="step-number">3</div>
+        <div class="step-label">المفاهيم</div>
+      </div>
+      <div class="step" data-step="4" onclick="goToStep(4)">
+        <div class="step-number">4</div>
+        <div class="step-label">الأمثلة</div>
+      </div>
+      <div class="step" data-step="5" onclick="goToStep(5)">
+        <div class="step-number">5</div>
+        <div class="step-label">الملخص</div>
+      </div>
+      <div class="step" data-step="6" onclick="goToStep(6)">
+        <div class="step-number">6</div>
+        <div class="step-label">التوقيع</div>
+      </div>
+    </div>
   </div>
 
-  <!-- اللوحة 1 -->
-  <div class="panel">
-    <h2>٢) اللوحة ١ - الغلاف والمقدمة</h2>
-    <label>العنوان الرئيسي بالعربية مع التشكيل إن أمكن</label>
-    <input type="text" id="p1_title" />
+  <!-- Main Container -->
+  <main class="container">
 
-    <label>العنوان الفرعي بالعربية</label>
-    <input type="text" id="p1_subtitle" />
+    <!-- Step 1: General Info -->
+    <section class="panel" id="step1">
+      <h2>المعلومات العامة</h2>
+      
+      <!-- Templates -->
+      <div class="form-group">
+        <label>🎯 اختر قالباً جاهزاً (اختياري)</label>
+        <div class="templates-grid">
+          <div class="template-card" onclick="loadTemplate('networks')">
+            <div class="template-icon">🌐</div>
+            <div class="template-name">شبكات الحاسوب</div>
+            <div class="template-desc">تعليمي للمرحلة الثانوية</div>
+          </div>
+          <div class="template-card" onclick="loadTemplate('science')">
+            <div class="template-icon">🔬</div>
+            <div class="template-name">علوم عامة</div>
+            <div class="template-desc">تجارب علمية مبسطة</div>
+          </div>
+          <div class="template-card" onclick="loadTemplate('math')">
+            <div class="template-icon">📐</div>
+            <div class="template-name">الرياضيات</div>
+            <div class="template-desc">مفاهيم رياضية مرئية</div>
+          </div>
+          <div class="template-card" onclick="loadTemplate('empty')">
+            <div class="template-icon">✨</div>
+            <div class="template-name">فارغ</div>
+            <div class="template-desc">ابدأ من الصفر</div>
+          </div>
+        </div>
+      </div>
 
-    <label>فقرة المقدمة بالعربية (شرح قصير للموضوع)</label>
-    <textarea id="p1_intro"></textarea>
+      <div class="form-group">
+        <label for="topic">عنوان الموضوع *</label>
+        <input type="text" id="topic" placeholder="مثال: شبكات الحاسب الآلي للصف الأول الثانوي">
+      </div>
 
-    <label>تعليق قصير تحت صورة الغلاف (Caption)</label>
-    <textarea id="p1_caption"></textarea>
+      <div class="form-group">
+        <label for="audience">الفئة المستهدفة *</label>
+        <select id="audience">
+          <option value="students">طلاب مدرسيون</option>
+          <option value="children">أطفال</option>
+          <option value="professionals">محترفون</option>
+          <option value="general">جمهور عام</option>
+        </select>
+      </div>
+
+      <div class="btn-group">
+        <button class="btn btn-primary" onclick="nextStep()">التالي ←</button>
+      </div>
+    </section>
+
+    <!-- Step 2: Cover -->
+    <section class="panel hidden" id="step2">
+      <h2>لوحة الغلاف والمقدمة</h2>
+      
+      <div class="form-group">
+        <label for="p1_title">العنوان الرئيسي بالعربية *</label>
+        <input type="text" id="p1_title" placeholder="مع التشكيل إن أمكن">
+      </div>
+
+      <div class="form-group">
+        <label for="p1_subtitle">العنوان الفرعي</label>
+        <input type="text" id="p1_subtitle" placeholder="عنوان فرعي توضيحي">
+      </div>
+
+      <div class="form-group">
+        <label for="p1_intro">فقرة المقدمة *</label>
+        <textarea id="p1_intro" placeholder="شرح قصير للموضوع (3-5 أسطر)"></textarea>
+      </div>
+
+      <div class="form-group">
+        <label for="p1_caption">تعليق صورة الغلاف (Caption)</label>
+        <textarea id="p1_caption" placeholder="وصف قصير تحت الصورة الرئيسية"></textarea>
+      </div>
+
+      <div class="btn-group">
+        <button class="btn btn-outline" onclick="prevStep()">→ السابق</button>
+        <button class="btn btn-primary" onclick="nextStep()">التالي ←</button>
+      </div>
+    </section>
+
+    <!-- Step 3: Concepts -->
+    <section class="panel hidden" id="step3">
+      <h2>لوحة المفاهيم الرئيسية</h2>
+      <p style="color: var(--text-secondary); margin-bottom: 16px;">أضف المفاهيم الأساسية (يُنصح بـ 2-3 مفاهيم)</p>
+      
+      <div id="conceptsContainer">
+        <!-- Concepts will be added here dynamically -->
+      </div>
+
+      <button class="btn-add" onclick="addConcept()">
+        <span>➕</span> إضافة مفهوم جديد
+      </button>
+
+      <div class="btn-group">
+        <button class="btn btn-outline" onclick="prevStep()">→ السابق</button>
+        <button class="btn btn-primary" onclick="nextStep()">التالي ←</button>
+      </div>
+    </section>
+
+    <!-- Step 4: Examples -->
+    <section class="panel hidden" id="step4">
+      <h2>لوحة الأمثلة والشروح المرئية</h2>
+      <p style="color: var(--text-secondary); margin-bottom: 16px;">
+        💡 اكتب وصف المشهد بالإنجليزية لمساعدة نموذج توليد الصور
+      </p>
+      
+      <div id="examplesContainer">
+        <!-- Examples will be added here dynamically -->
+      </div>
+
+      <button class="btn-add" onclick="addExample()">
+        <span>➕</span> إضافة مثال جديد
+      </button>
+
+      <div class="btn-group">
+        <button class="btn btn-outline" onclick="prevStep()">→ السابق</button>
+        <button class="btn btn-primary" onclick="nextStep()">التالي ←</button>
+      </div>
+    </section>
+
+    <!-- Step 5: Summary -->
+    <section class="panel hidden" id="step5">
+      <h2>لوحة الملخص والنقاط الرئيسية</h2>
+      
+      <div class="form-group">
+        <label for="p4_heading">عنوان قسم الملخص *</label>
+        <input type="text" id="p4_heading" placeholder="مثال: أهم النقاط المستفادة">
+      </div>
+
+      <div id="bulletsContainer">
+        <!-- Bullets will be added here dynamically -->
+      </div>
+
+      <button class="btn-add" onclick="addBullet()">
+        <span>➕</span> إضافة نقطة جديدة
+      </button>
+
+      <div class="btn-group">
+        <button class="btn btn-outline" onclick="prevStep()">→ السابق</button>
+        <button class="btn btn-primary" onclick="nextStep()">التالي ←</button>
+      </div>
+    </section>
+
+    <!-- Step 6: Signature -->
+    <section class="panel hidden" id="step6">
+      <h2>التوقيع واللمسات النهائية</h2>
+      
+      <div class="form-group">
+        <label for="signature">اسم المؤلف / التوقيع *</label>
+        <input type="text" id="signature" value="باسم السيد" placeholder="سيظهر كتوقيع زخرفي">
+      </div>
+
+      <div class="form-group">
+        <label for="style_notes">ملاحظات إضافية على التصميم <span class="optional">(اختياري)</span></label>
+        <textarea id="style_notes" placeholder="أي تعليمات إضافية لمولد الصور..."></textarea>
+      </div>
+
+      <div class="btn-group">
+        <button class="btn btn-outline" onclick="prevStep()">→ السابق</button>
+        <button class="btn btn-primary" onclick="generatePrompt()">
+          <span>🚀</span> توليد البرومبت
+        </button>
+      </div>
+    </section>
+
+    <!-- Output Section -->
+    <section class="output-section hidden" id="outputSection">
+      <div class="output-header">
+        <h2>✅ البرومبت النهائي</h2>
+        <div class="output-actions">
+          <button class="btn btn-secondary" onclick="copyPrompt()">
+            📋 نسخ
+          </button>
+          <button class="btn btn-outline" onclick="downloadPrompt()">
+            💾 تحميل
+          </button>
+          <button class="btn btn-outline" onclick="resetForm()">
+            🔄 جديد
+          </button>
+        </div>
+      </div>
+      <div id="copyStatus" class="status-message"></div>
+      <textarea id="promptResult" readonly></textarea>
+    </section>
+
+  </main>
+
+  <!-- Auto-save Indicator -->
+  <div class="auto-save-indicator" id="autoSaveIndicator">
+    <div class="save-dot"></div>
+    <span>جارِ الحفظ التلقائي...</span>
   </div>
 
-  <!-- اللوحة 2 -->
-  <div class="panel">
-    <h2>٣) اللوحة ٢ - المفاهيم الرئيسية</h2>
-    <p>يمكنك إدخال حتى 3 مفاهيم رئيسية.</p>
+  <!-- History Toggle Button -->
+  <button class="history-toggle" onclick="toggleHistory()" title="السجل">📜</button>
 
-    <label>العنوان ١</label>
-    <input type="text" id="c1_title" />
-    <label>الشرح ١</label>
-    <textarea id="c1_desc"></textarea>
-
-    <label>العنوان ٢</label>
-    <input type="text" id="c2_title" />
-    <label>الشرح ٢</label>
-    <textarea id="c2_desc"></textarea>
-
-    <label>العنوان ٣ (اختياري)</label>
-    <input type="text" id="c3_title" />
-    <label>الشرح ٣ (اختياري)</label>
-    <textarea id="c3_desc"></textarea>
-  </div>
-
-  <!-- اللوحة 3 -->
-  <div class="panel">
-    <h2>٤) اللوحة ٣ - أمثلة وشروح مرئية</h2>
-    <p>اكتب وصف المشهد بالإنجليزية ليساعد نموذج الصور، والتعليق بالعربية.</p>
-
-    <label>عنوان المثال ١ بالعربية</label>
-    <input type="text" id="e1_title" />
-    <label>وصف المشهد ١ بالإنجليزية</label>
-    <textarea id="e1_visual"></textarea>
-    <label>تعليق المثال ١ بالعربية (Caption)</label>
-    <textarea id="e1_caption"></textarea>
-
-    <label>عنوان المثال ٢ بالعربية (اختياري)</label>
-    <input type="text" id="e2_title" />
-    <label>وصف المشهد ٢ بالإنجليزية (اختياري)</label>
-    <textarea id="e2_visual"></textarea>
-    <label>تعليق المثال ٢ بالعربية (اختياري)</label>
-    <textarea id="e2_caption"></textarea>
-  </div>
-
-  <!-- اللوحة 4 -->
-  <div class="panel">
-    <h2>٥) اللوحة ٤ - الملخص والنقاط</h2>
-    <label>عنوان قسم الملخص بالعربية</label>
-    <input type="text" id="p4_heading" />
-
-    <label>النقطة ١</label>
-    <input type="text" id="b1" />
-    <label>النقطة ٢</label>
-    <input type="text" id="b2" />
-    <label>النقطة ٣ (اختياري)</label>
-    <input type="text" id="b3" />
-    <label>النقطة ٤ (اختياري)</label>
-    <input type="text" id="b4" />
-  </div>
-
-  <!-- التوقيع -->
-  <div class="panel">
-    <h2>٦) التوقيع</h2>
-    <label>الاسم بالعربية (يظهر كتوقيع زخرفي)</label>
-    <input type="text" id="signature" value="باسم السيد" />
-  </div>
-
-  <button onclick="generatePrompt()">توليد البرومبت</button>
-
-  <div id="output">
-    <h2>البرومبت النهائي</h2>
-    <button id="copyBtn" onclick="copyPrompt()">نسخ البرومبت</button>
-    <span id="copyStatus"></span>
-    <textarea id="promptResult" readonly></textarea>
-  </div>
+  <!-- History Panel -->
+  <div class="history-overlay" id="historyOverlay" onclick="toggleHistory()"></div>
+  <aside class="history-panel" id="historyPanel">
+    <div class="history-header">
+      <h3>📜 سجل البرومبتات</h3>
+      <button class="btn-remove" onclick="clearHistory()" style="padding: 6px 12px;">مسح الكل</button>
+    </div>
+    <div id="historyList">
+      <!-- History items will be added here -->
+    </div>
+  </aside>
 
   <script>
+    // =====================================================
+    // STATE MANAGEMENT
+    // =====================================================
+    let currentStep = 1;
+    const totalSteps = 6;
+    let conceptCount = 0;
+    let exampleCount = 0;
+    let bulletCount = 0;
+    
+    // Auto-save debounce timer
+    let autoSaveTimer = null;
+    const AUTO_SAVE_DELAY = 1000; // 1 second
+
+    // =====================================================
+    // TEMPLATES DATA
+    // =====================================================
+    const templates = {
+      networks: {
+        topic: 'شَبَكَاتُ الْحَاسِبِ الآلِيِّ لِلصَّفِّ الْأَوَّلِ الثَّانَوِيِّ',
+        audience: 'students',
+        p1_title: 'شَبَكَاتُ الْحَاسِبِ الآلِيِّ',
+        p1_subtitle: 'دليلك الشامل لفهم عالم الاتصالات الرقمية',
+        p1_intro: 'تُعَدُّ الشبكات العمود الفقري للعصر الرقمي، حيث تُمكِّن الأجهزة من التواصل ومشاركة الموارد. في هذا البروشور، سنتعرف على أساسيات الشبكات وأنواعها ومكوناتها بطريقة مبسطة ومرئية.',
+        p1_caption: 'شبكة حاسوبية تربط بين عدة أجهزة في بيئة تعليمية',
+        concepts: [
+          { title: 'مَفْهُومُ الشَّبَكَةِ', desc: 'هي مجموعة من الأجهزة المرتبطة ببعضها البعض لمشاركة الموارد والمعلومات مثل الطابعات والملفات واتصال الإنترنت.' },
+          { title: 'أَنْوَاعُ الشَّبَكَاتِ', desc: 'تشمل LAN (شبكة محلية) و WAN (شبكة واسعة) و MAN (شبكة مدينة)، ولكل نوع نطاق واستخدام خاص.' },
+          { title: 'مُكَوِّنَاتُ الشَّبَكَةِ', desc: 'تشمل أجهزة مثل الراوتر والسويتش والكابل، بالإضافة إلى بروتوكولات الاتصال التي تنظم نقل البيانات.' }
+        ],
+        examples: [
+          { title: 'شبكة مدرسية', visual: 'A modern classroom with computers connected by visible network cables, showing a central server cabinet, 3D isometric view, bright educational environment', caption: 'مثال على شبكة محلية (LAN) في مدرسة' },
+          { title: 'الإنترنت العالمي', visual: 'Earth globe surrounded by glowing network nodes and connection lines, satellites in orbit, data streams visualization, futuristic 3D style', caption: 'تمثيل مرئي للإنترنت كشبكة عالمية' }
+        ],
+        p4_heading: 'أَهَمُّ النِّقَاطِ الْمُسْتَفَادَةِ',
+        bullets: ['الشبكات تُمكِّن من مشاركة الموارد والبيانات بين الأجهزة', 'تختلف أنواع الشبكات حسب المساحة والتغطية', 'فهم أساسيات الشبكات ضروري في العصر الرقمي'],
+        signature: 'فريق التعليم التقني'
+      },
+      science: {
+        topic: 'التَحَوُّلاَتُ الكِيمْيَائِيَّةُ',
+        audience: 'students',
+        p1_title: 'التَحَوُّلاَتُ الكِيمْيَائِيَّةُ',
+        p1_subtitle: 'رحلة مثيرة في عالم الذرات والجزيئات',
+        p1_intro: 'التحولات الكيميائية هي عمليات تُغيِّر تركيب المادة وتُنتج مواد جديدة بخصائص مختلفة. سنستكشف معاً أنواع هذه التحولات ودلائل حدوثها في حياتنا اليومية.',
+        p1_caption: 'تفاعل كيميائي ينتج عنه تغير في اللون والحرارة',
+        concepts: [
+          { title: 'مَا هِيَ التَّحَوُّلاَتُ الكِيمْيَائِيَّةُ؟', desc: 'هي عمليات تُؤدي إلى تكوين مواد جديدة ذات خصائص مختلفة عن المواد الأصلية، ولا يمكن عكسها بسهولة.' },
+          { title: 'دَلاَئِلُ وُقُوعِ التَّحَوُّلِ', desc: 'تغير اللون، انبعاث غاز، تكون راسب، تغير في الحرارة (امتصاص أو انطلاق طاقة).' },
+          { title: 'أَمْثِلَةٌ يَوْمِيَّةٌ', desc: 'صدأ الحديد، احتراق الخشب، هضم الطعام، تفاعل الخل مع بيكربونات الصوديوم.' }
+        ],
+        examples: [
+          { title: 'تفاعل الاحتراق', visual: 'Colorful chemical reaction in a laboratory flask, bubbles forming, color change from blue to red, 3D molecular visualization overlay, bright lighting', caption: 'تفاعل كيمياسي يُظهر تغيراً واضحاً في اللون' }
+        ],
+        p4_heading: 'الخلاصة',
+        bullets: ['التحولات الكيميائية تُنتج مواد جديدة تماماً', 'exist multiple indicators to identify chemical changes', 'التحولات الكيميائية تختلف عن التحولات الفيزيائية'],
+        signature: 'معمل العلوم التفاعلي'
+      },
+      math: {
+        topic: 'النِّسْبَةُ الْمُتَنَاسَبَةُ فِي الْهِنْدَسَةِ',
+        audience: 'students',
+        p1_title: 'النِّسْبَةُ الْمُتَنَاسَبَةُ',
+        p1_subtitle: 'جمال الرياضيات في التصميم والفن',
+        p1_intro: 'النسبة المتناسبة (Golden Ratio) هي نسبة رياضية موجودة في الطبيعة والفن والهندسة منذ آلاف السنين. تُقدَّر بحوالي 1.618 وتُعتبر رمزاً للجمال والتناغم البصري.',
+        p1_caption: 'مستطيل ذهبي يُظهر النسبة المتناسبة في الطبيعة',
+        concepts: [
+          { title: 'تَعْرِيفُ النِّسْبَةِ الْمُتَنَاسَبَةِ', desc: 'نسبة بين جزئين حيث يكون مجموعهما إلى الجزء الأكبر كما هو الأكبر إلى الأصغر، وقيمتها التقريبية φ ≈ 1.618.' },
+          { title: 'وُجُودُهَا فِي الطَّبِيعَةِ', desc: 'تظهر في أصداف البحر، أوراق الشمسية، دوامات الماء، ترتيب بذور الأزهار، وحتى في جسم الإنسان.' },
+          { title: 'تَطْبِيقَاتُهَا الْهِنْدَسِيَّةُ', desc: 'استخدمها اليونانيون في بناء الأهرامات والبارثينون، وما زالت تُستخدم في التصميم الحديث والعمارة.' }
+        ],
+        examples: [
+          { title: 'اللولب الذهبي', visual: 'Golden spiral Fibonacci sequence in 3D, nautilus shell cross-section with mathematical grid overlay, glowing golden lines on dark background, educational diagram style', caption: 'اللولب الذهبي في صدفة البحر الطبيعية' },
+          { title: 'الوجه الإنساني', visual: 'Human face with golden ratio proportions marked, architectural blueprint style overlay showing measurements, classical sculpture aesthetic, soft lighting', caption: 'تطبيق النسبة الذهبية في نسب الوجه الإنساني' }
+        ],
+        p4_heading: 'ما تعلمناه اليوم',
+        bullets: ['النسبة المتناسبة تساوي تقريباً 1.618', 'توجد في الطبيعة والفن والعمارة', 'تُضفي جمالاً وتناغماً على التصاميم'],
+        signature: 'قسم الرياضيات التطبيقية'
+      },
+      empty: {
+        topic: '',
+        audience: 'students',
+        p1_title: '',
+        p1_subtitle: '',
+        p1_intro: '',
+        p1_caption: '',
+        concepts: [],
+        examples: [],
+        p4_heading: '',
+        bullets: [],
+        signature: ''
+      }
+    };
+
+    // =====================================================
+    // INITIALIZATION
+    // =====================================================
+    document.addEventListener('DOMContentLoaded', function() {
+      // Initialize dynamic sections
+      addConcept();
+      addConcept();
+      addExample();
+      addBullet();
+      addBullet();
+      addBullet();
+
+      // Load saved data
+      loadFromLocalStorage();
+
+      // Setup auto-save listeners
+      setupAutoSave();
+
+      // Load history
+      renderHistory();
+
+      // Update progress
+      updateProgress();
+    });
+
+    // =====================================================
+    // NAVIGATION FUNCTIONS
+    // =====================================================
+    function goToStep(step) {
+      if (step < 1 || step > totalSteps) return;
+
+      // Hide current step
+      document.getElementById(`step${currentStep}`).classList.add('hidden');
+      
+      // Remove active class from current step
+      document.querySelector(`.step[data-step="${currentStep}"]`).classList.remove('active');
+
+      // Show new step
+      currentStep = step;
+      document.getElementById(`step${currentStep}`).classList.remove('hidden');
+      
+      // Add active class to new step
+      document.querySelector(`.step[data-step="${currentStep}"]`).classList.add('active');
+
+      // Update progress bar
+      updateProgress();
+
+      // Scroll to top of panel
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function nextStep() {
+      if (currentStep < totalSteps) {
+        // Validate current step before proceeding
+        if (validateStep(currentStep)) {
+          goToStep(currentStep + 1);
+        }
+      }
+    }
+
+    function prevStep() {
+      if (currentStep > 1) {
+        goToStep(currentStep - 1);
+      }
+    }
+
+    function updateProgress() {
+      const progressLine = document.getElementById('progressLine');
+      const percentage = ((currentStep - 1) / (totalSteps - 1)) * 100;
+      progressLine.style.width = `${percentage}%`;
+
+      // Update step classes
+      for (let i = 1; i <= totalSteps; i++) {
+        const stepEl = document.querySelector(`.step[data-step="${i}"]`);
+        stepEl.classList.remove('completed');
+        if (i < currentStep) {
+          stepEl.classList.add('completed');
+        }
+      }
+    }
+
+    // =====================================================
+    // VALIDATION
+    // =====================================================
+    function validateStep(step) {
+      switch(step) {
+        case 1:
+          const topic = document.getElementById('topic').value.trim();
+          if (!topic) {
+            showStatus('error', 'الرجاء إدخال عنوان الموضوع');
+            return false;
+          }
+          return true;
+        case 2:
+          const title = document.getElementById('p1_title').value.trim();
+          const intro = document.getElementById('p1_intro').value.trim();
+          if (!title || !intro) {
+            showStatus('error', 'الرجاء إدخال العنوان الرئيسي والمقدمة');
+            return false;
+          }
+          return true;
+        default:
+          return true;
+      }
+    }
+
+    // =====================================================
+    // DYNAMIC FORM ELEMENTS
+    // =====================================================
+    function addConcept() {
+      conceptCount++;
+      const container = document.getElementById('conceptsContainer');
+      const div = document.createElement('div');
+      div.className = 'repeatable-group';
+      div.id = `concept_${conceptCount}`;
+      div.innerHTML = `
+        <div class="group-header">
+          <span class="group-title">📌 المفهوم ${conceptCount}</span>
+          ${conceptCount > 1 ? '<button class="btn-remove" onclick="removeElement(\'concept_' + conceptCount + '\')">✕ حذف</button>' : ''}
+        </div>
+        <div class="form-group">
+          <label>العنوان بالعربية *</label>
+          <input type="text" id="c${conceptCount}_title" placeholder="عنوان المفهوم">
+        </div>
+        <div class="form-group">
+          <label>الشرح بالعربية *</label>
+          <textarea id="c${conceptCount}_desc" placeholder="شرح مفصل للمفهوم"></textarea>
+        </div>
+      `;
+      container.appendChild(div);
+      setupAutoSaveForElement(div);
+    }
+
+    function addExample() {
+      exampleCount++;
+      const container = document.getElementById('examplesContainer');
+      const div = document.createElement('div');
+      div.className = 'repeatable-group';
+      div.id = `example_${exampleCount}`;
+      div.innerHTML = `
+        <div class="group-header">
+          <span class="group-title">🖼️ المثال ${exampleCount}</span>
+          ${exampleCount > 1 ? '<button class="btn-remove" onclick="removeElement(\'example_' + exampleCount + '\')">✕ حذف</button>' : ''}
+        </div>
+        <div class="form-group">
+          <label>عنوان المثال بالعربية *</label>
+          <input type="text" id="e${exampleCount}_title" placeholder="عنوان المثال">
+        </div>
+        <div class="form-group">
+          <label>وصف المشهد بالإنجليزية * <span style="color: var(--accent-secondary);">(للموديل)</span></label>
+          <textarea id="e${exampleCount}_visual" placeholder="Describe the 3D scene in English for AI image generation..."></textarea>
+        </div>
+        <div class="form-group">
+          <label>التعليق بالعربية (Caption) *</label>
+          <textarea id="e${exampleCount}_caption" placeholder="تعليق توضيحي تحت الصورة"></textarea>
+        </div>
+      `;
+      container.appendChild(div);
+      setupAutoSaveForElement(div);
+    }
+
+    function addBullet() {
+      bulletCount++;
+      const container = document.getElementById('bulletsContainer');
+      const div = document.createElement('div');
+      div.className = 'form-group';
+      div.id = `bullet_${bulletCount}`;
+      div.innerHTML = `
+        <div style="display: flex; gap: 10px; align-items: flex-start;">
+          <div style="flex: 1;">
+            <label>النقطة ${bulletCount} ${bulletCount > 2 ? '' : '*'}</label>
+            <input type="text" id="b${bulletCount}" placeholder="نص النقطة الملخصة">
+          </div>
+          ${bulletCount > 2 ? '<button class="btn-remove" style="margin-top: 28px;" onclick="removeElement(\'bullet_' + bulletCount + '\')">✕</button>' : ''}
+        </div>
+      `;
+      container.appendChild(div);
+      setupAutoSaveForElement(div);
+    }
+
+    function removeElement(id) {
+      const element = document.getElementById(id);
+      if (element) {
+        element.style.animation = 'fadeOut 0.3s ease';
+        setTimeout(() => {
+          element.remove();
+          triggerAutoSave();
+        }, 300);
+      }
+    }
+
+    // =====================================================
+    // TEMPLATES
+    // =====================================================
+    function loadTemplate(templateKey) {
+      const template = templates[templateKey];
+      if (!template) return;
+
+      // Fill form fields
+      document.getElementById('topic').value = template.topic;
+      document.getElementById('audience').value = template.audience;
+      document.getElementById('p1_title').value = template.p1_title;
+      document.getElementById('p1_subtitle').value = template.p1_subtitle;
+      document.getElementById('p1_intro').value = template.p1_intro;
+      document.getElementById('p1_caption').value = template.p1_caption;
+      document.getElementById('p4_heading').value = template.p4_heading;
+      document.getElementById('signature').value = template.signature;
+
+      // Clear and reload concepts
+      const conceptsContainer = document.getElementById('conceptsContainer');
+      conceptsContainer.innerHTML = '';
+      conceptCount = 0;
+      
+      template.concepts.forEach((concept, index) => {
+        addConcept();
+        document.getElementById(`c${index + 1}_title`).value = concept.title;
+        document.getElementById(`c${index + 1}_desc`).value = concept.desc;
+      });
+
+      // Clear and reload examples
+      const examplesContainer = document.getElementById('examplesContainer');
+      examplesContainer.innerHTML = '';
+      exampleCount = 0;
+      
+      template.examples.forEach((example, index) => {
+        addExample();
+        document.getElementById(`e${index + 1}_title`).value = example.title;
+        document.getElementById(`e${index + 1}_visual`).value = example.visual;
+        document.getElementById(`e${index + 1}_caption`).value = example.caption;
+      });
+
+      // Clear and reload bullets
+      const bulletsContainer = document.getElementById('bulletsContainer');
+      bulletsContainer.innerHTML = '';
+      bulletCount = 0;
+      
+      template.bullets.forEach((bullet, index) => {
+        addBullet();
+        document.getElementById(`b${index + 1}`).value = bullet;
+      });
+
+      triggerAutoSave();
+      showStatus('success', 'تم تحميل القالب بنجاح! ✓');
+    }
+
+    // =====================================================
+    // PROMPT GENERATION
+    // =====================================================
     function generatePrompt() {
-      const topic = document.getElementById('topic').value || "الموضوع";
-      const audience = document.getElementById('audience').value || "students";
+      // Collect all form data
+      const data = collectFormData();
 
-      const p1_title = document.getElementById('p1_title').value;
-      const p1_subtitle = document.getElementById('p1_subtitle').value;
-      const p1_intro = document.getElementById('p1_intro').value;
-      const p1_caption = document.getElementById('p1_caption').value;
-
-      const c1_title = document.getElementById('c1_title').value;
-      const c1_desc = document.getElementById('c1_desc').value;
-      const c2_title = document.getElementById('c2_title').value;
-      const c2_desc = document.getElementById('c2_desc').value;
-      const c3_title = document.getElementById('c3_title').value;
-      const c3_desc = document.getElementById('c3_desc').value;
-
-      const e1_title = document.getElementById('e1_title').value;
-      const e1_visual = document.getElementById('e1_visual').value;
-      const e1_caption = document.getElementById('e1_caption').value;
-
-      const e2_title = document.getElementById('e2_title').value;
-      const e2_visual = document.getElementById('e2_visual').value;
-      const e2_caption = document.getElementById('e2_caption').value;
-
-      const p4_heading = document.getElementById('p4_heading').value;
-      const b1 = document.getElementById('b1').value;
-      const b2 = document.getElementById('b2').value;
-      const b3 = document.getElementById('b3').value;
-      const b4 = document.getElementById('b4').value;
-
-      const signature = document.getElementById('signature').value;
-
-      let conceptsText = "";
-      if (c1_title && c1_desc) {
-        conceptsText += `1) Concept\n- Arabic title:\n  "${c1_title}"\n- Arabic description:\n  "${c1_desc}"\n\n`;
-      }
-      if (c2_title && c2_desc) {
-        conceptsText += `2) Concept\n- Arabic title:\n  "${c2_title}"\n- Arabic description:\n  "${c2_desc}"\n\n`;
-      }
-      if (c3_title && c3_desc) {
-        conceptsText += `3) Concept\n- Arabic title:\n  "${c3_title}"\n- Arabic description:\n  "${c3_desc}"\n\n`;
+      // Validate required fields
+      if (!data.topic || !data.p1_title || !data.p1_intro) {
+        showStatus('error', 'يرجى ملء الحقول المطلوبة في الخطوات الأولى');
+        goToStep(1);
+        return;
       }
 
-      let examplesText = "";
-      if (e1_title && e1_visual && e1_caption) {
-        examplesText += `Example 1:\n- Arabic example title:\n  "${e1_title}"\n- 3D scene description:\n  ${e1_visual}\n- Arabic caption:\n  "${e1_caption}"\n\n`;
-      }
-      if (e2_title && e2_visual && e2_caption) {
-        examplesText += `Example 2:\n- Arabic example title:\n  "${e2_title}"\n- 3D scene description:\n  ${e2_visual}\n- Arabic caption:\n  "${e2_caption}"\n\n`;
-      }
+      // Build concepts text
+      let conceptsText = data.concepts.map((c, i) => 
+        `${i+1}) Concept\n- Arabic title:\n  "${c.title}"\n- Arabic description:\n  "${c.desc}"\n`
+      ).join('\n');
 
-      let bulletsText = "";
-      if (b1) bulletsText += `  - "${b1}"\n`;
-      if (b2) bulletsText += `  - "${b2}"\n`;
-      if (b3) bulletsText += `  - "${b3}"\n`;
-      if (b4) bulletsText += `  - "${b4}"\n`;
+      // Build examples text
+      let examplesText = data.examples.map((e, i) =>
+        `Example ${i+1}:\n- Arabic example title:\n  "${e.title}"\n- 3D scene description:\n  ${e.visual}\n- Arabic caption:\n  "${e.caption}"\n`
+      ).join('\n');
 
+      // Build bullets text
+      let bulletsText = data.bullets.map(b => `  - "${b}"\n`).join('');
+
+      // Build style notes
+      const styleNotes = document.getElementById('style_notes').value.trim();
+      const styleSection = styleNotes ? `\n\nADDITIONAL STYLE INSTRUCTIONS:\n${styleNotes}` : '';
+
+      // Generate final prompt
       const prompt = `Act as a top-tier prompt engineer and 3D infographic designer.
 
 TASK:
 Create a 3D tri-fold (four-panel) infographic brochure with a modern, immersive, and high-quality visual style about the topic:
-"${topic}".
+"${data.topic}".
 
 LANGUAGE & TEXT:
 - All written content on the brochure must be in formal Arabic (الفصحى) with full diacritics.
@@ -254,7 +1283,7 @@ DESIGN STYLE:
 - Use a dark base background (deep navy blue blended with dark grey).
 - This is an educational topic, so use a bright, cheerful color palette (bright blues, greens, warm orange accents) with strong contrast and readability.
 - Apply soft, consistent lighting, gentle shadows, and clear 3D depth.
-- Use Pixar-style 3D characters, friendly and expressive, suitable for "${audience}".
+- Use Pixar-style 3D characters, friendly and expressive, suitable for "${data.audience}".
 
 GLOBAL LAYOUT:
 - 3D tri-fold brochure, 4 panels, print-ready, high resolution.
@@ -263,57 +1292,363 @@ GLOBAL LAYOUT:
 PANEL 1: COVER / INTRODUCTION
 - Place a Pixar-style 3D character suitable for the topic and audience, holding a pen or pointer, gesturing toward the brochure content.
 - Arabic main title:
-  "${p1_title}"
+  "${data.p1_title}"
 - Arabic subtitle:
-  "${p1_subtitle}"
+  "${data.p1_subtitle}"
 - Introductory Arabic paragraph:
-  "${p1_intro}"
+  "${data.p1_intro}"
 - Background: 3D icons and shapes relevant to the topic.
 - Arabic caption under the main image:
-  "${p1_caption}"
+  "${data.p1_caption}"
 
 PANEL 2: MAIN CONCEPTS
 Create a clean layout with small section headings and short Arabic explanations. For each concept:
 
-${conceptsText}PANEL 3: EXAMPLES & VISUAL EXPLANATIONS
+ ${conceptsText}
+PANEL 3: EXAMPLES & VISUAL EXPLANATIONS
 Use practical visual scenes to illustrate the topic. For each example, create a 3D scene and place the Arabic caption under the image:
 
-${examplesText}PANEL 4: SUMMARY / KEY TAKEAWAYS
+ ${examplesText}
+PANEL 4: SUMMARY / KEY TAKEAWAYS
 - Arabic heading:
-  "${p4_heading}"
+  "${data.p4_heading}"
 - Bulleted Arabic summary points:
-${bulletsText}
+ ${bulletsText}
 SIGNATURE:
 - At the bottom of the back panel, add a decorative Arabic signature:
-  "${signature}"
-- Style: elegant Arabic calligraphy matching the brochure’s colors.
+  "${data.signature}"
+- Style: elegant Arabic calligraphy matching the brochure's colors.
+ ${styleSection}
 
 OUTPUT:
 - High-resolution 3D image.
 - 3D perspective showing the tri-fold brochure with all four panels visible.
 - Maintain consistent lighting, colors, and Pixar-style 3D characters across all panels.`;
 
+      // Display result
       document.getElementById('promptResult').value = prompt;
-      document.getElementById('copyStatus').textContent = "";
+      document.getElementById('outputSection').classList.remove('hidden');
+      
+      // Save to history
+      saveToHistory(data.topic, prompt);
+
+      // Scroll to output
+      document.getElementById('outputSection').scrollIntoView({ behavior: 'smooth' });
+      
+      showStatus('success', 'تم توليد البرومبت بنجاح! 🎉');
     }
 
+    function collectFormData() {
+      const data = {
+        topic: document.getElementById('topic').value.trim(),
+        audience: document.getElementById('audience').value,
+        p1_title: document.getElementById('p1_title').value.trim(),
+        p1_subtitle: document.getElementById('p1_subtitle').value.trim(),
+        p1_intro: document.getElementById('p1_intro').value.trim(),
+        p1_caption: document.getElementById('p1_caption').value.trim(),
+        p4_heading: document.getElementById('p4_heading').value.trim(),
+        signature: document.getElementById('signature').value.trim(),
+        concepts: [],
+        examples: [],
+        bullets: []
+      };
+
+      // Collect concepts
+      for (let i = 1; i <= conceptCount; i++) {
+        const title = document.getElementById(`c${i}_title`);
+        const desc = document.getElementById(`c${i}_desc`);
+        if (title && desc && title.value.trim() && desc.value.trim()) {
+          data.concepts.push({ title: title.value.trim(), desc: desc.value.trim() });
+        }
+      }
+
+      // Collect examples
+      for (let i = 1; i <= exampleCount; i++) {
+        const title = document.getElementById(`e${i}_title`);
+        const visual = document.getElementById(`e${i}_visual`);
+        const caption = document.getElementById(`e${i}_caption`);
+        if (title && visual && caption && title.value.trim() && visual.value.trim() && caption.value.trim()) {
+          data.examples.push({ 
+            title: title.value.trim(), 
+            visual: visual.value.trim(), 
+            caption: caption.value.trim() 
+          });
+        }
+      }
+
+      // Collect bullets
+      for (let i = 1; i <= bulletCount; i++) {
+        const bullet = document.getElementById(`b${i}`);
+        if (bullet && bullet.value.trim()) {
+          data.bullets.push(bullet.value.trim());
+        }
+      }
+
+      return data;
+    }
+
+    // =====================================================
+    // COPY & DOWNLOAD FUNCTIONS
+    // =====================================================
     async function copyPrompt() {
-      const textArea = document.getElementById('promptResult');
-      const status = document.getElementById('copyStatus');
-      const text = textArea.value.trim();
+      const textarea = document.getElementById('promptResult');
+      const text = textarea.value.trim();
 
       if (!text) {
-        status.textContent = "لا يوجد برومبت لنسخه. ولّد البرومبت أولاً.";
+        showStatus('error', 'لا يوجد برومبت لنسخه');
         return;
       }
 
       try {
         await navigator.clipboard.writeText(text);
-        status.textContent = "تم نسخ البرومبت إلى الحافظة ✔";
+        showStatus('success', 'تم النسخ إلى الحافظة! ✓');
       } catch (err) {
-        status.textContent = "تعذّر النسخ تلقائيًا، انسخ يدويًا (Ctrl+C).";
+        // Fallback for older browsers
+        textarea.select();
+        document.execCommand('copy');
+        showStatus('info', 'تم النسخ! (طريقة بديلة)');
       }
     }
+
+    function downloadPrompt() {
+      const text = document.getElementById('promptResult').value;
+      if (!text) {
+        showStatus('error', 'لا يوجد برومبت لتحميله');
+        return;
+      }
+
+      const blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `prompt-${Date.now()}.txt`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      
+      showStatus('success', 'تم تحميل الملف! 💾');
+    }
+
+    // =====================================================
+    // LOCAL STORAGE (AUTO-SAVE)
+    // =====================================================
+    function setupAutoSave() {
+      const inputs = document.querySelectorAll('input, textarea, select');
+      inputs.forEach(input => {
+        input.addEventListener('input', () => {
+          debounceAutoSave();
+        });
+        input.addEventListener('change', () => {
+          triggerAutoSave();
+        });
+      });
+    }
+
+    function setupAutoSaveForElement(element) {
+      const inputs = element.querySelectorAll('input, textarea');
+      inputs.forEach(input => {
+        input.addEventListener('input', () => {
+          debounceAutoSave();
+        });
+        input.addEventListener('change', () => {
+          triggerAutoSave();
+        });
+      });
+    }
+
+    function debounceAutoSave() {
+      if (autoSaveTimer) clearTimeout(autoSaveTimer);
+      autoSaveTimer = setTimeout(triggerAutoSave, AUTO_SAVE_DELAY);
+    }
+
+    function triggerAutoSave() {
+      const indicator = document.getElementById('autoSaveIndicator');
+      indicator.classList.add('show');
+      
+      // Save all form data
+      const formData = {
+        currentStep: currentStep,
+        conceptCount: conceptCount,
+        exampleCount: exampleCount,
+        bulletCount: bulletCount,
+        fields: {}
+      };
+
+      // Collect all field values
+      const inputs = document.querySelectorAll('input, textarea, select');
+      inputs.forEach(input => {
+        if (input.id) {
+          formData.fields[input.id] = input.value;
+        }
+      });
+
+      try {
+        localStorage.setItem('brochurePromptData', JSON.stringify(formData));
+        setTimeout(() => {
+          indicator.classList.remove('show');
+        }, 1000);
+      } catch (e) {
+        console.warn('Auto-save failed:', e);
+        indicator.classList.remove('show');
+      }
+    }
+
+    function loadFromLocalStorage() {
+      try {
+        const saved = localStorage.getItem('brochurePromptData');
+        if (saved) {
+          const formData = JSON.parse(saved);
+          
+          // Restore fields
+          if (formData.fields) {
+            Object.keys(formData.fields).forEach(id => {
+              const element = document.getElementById(id);
+              if (element && formData.fields[id]) {
+                element.value = formData.fields[id];
+              }
+            });
+          }
+
+          // Restore counts and rebuild dynamic elements if needed
+          if (formData.conceptCount && formData.conceptCount > 2) {
+            for (let i = 3; i <= formData.conceptCount; i++) {
+              addConcept();
+            }
+          }
+          if (formData.exampleCount && formData.exampleCount > 1) {
+            for (let i = 2; i <= formData.exampleCount; i++) {
+              addExample();
+            }
+          }
+          if (formData.bulletCount && formData.bulletCount > 3) {
+            for (let i = 4; i <= formData.bulletCount; i++) {
+              addBullet();
+            }
+          }
+
+          showStatus('info', 'تم استعادة البيانات المحفوظة');
+        }
+      } catch (e) {
+        console.warn('Failed to load saved data:', e);
+      }
+    }
+
+    // =====================================================
+    // HISTORY MANAGEMENT
+    // =====================================================
+    function saveToHistory(title, prompt) {
+      try {
+        let history = JSON.parse(localStorage.getItem('promptHistory') || '[]');
+        
+        // Add new entry at the beginning
+        history.unshift({
+          id: Date.now(),
+          title: title || 'بدون عنوان',
+          prompt: prompt,
+          date: new Date().toLocaleString('ar-EG')
+        });
+
+        // Keep only last 20 entries
+        if (history.length > 20) {
+          history = history.slice(0, 20);
+        }
+
+        localStorage.setItem('promptHistory', JSON.stringify(history));
+        renderHistory();
+      } catch (e) {
+        console.warn('Failed to save history:', e);
+      }
+    }
+
+    function renderHistory() {
+      const container = document.getElementById('historyList');
+      try {
+        const history = JSON.parse(localStorage.getItem('promptHistory') || '[]');
+        
+        if (history.length === 0) {
+          container.innerHTML = '<p style="color: var(--text-secondary); text-align: center; padding: 20px;">لا يوجد سجل بعد</p>';
+          return;
+        }
+
+        container.innerHTML = history.map(item => `
+          <div class="history-item" onclick="loadFromHistory(${item.id})">
+            <div class="history-item-title">${escapeHtml(item.title)}</div>
+            <div class="history-item-date">${item.date}</div>
+          </div>
+        `).join('');
+      } catch (e) {
+        container.innerHTML = '<p style="color: var(--text-secondary);">خطأ في تحميل السجل</p>';
+      }
+    }
+
+    function loadFromHistory(id) {
+      try {
+        const history = JSON.parse(localStorage.getItem('promptHistory') || '[]');
+        const item = history.find(h => h.id === id);
+        
+        if (item) {
+          document.getElementById('promptResult').value = item.prompt;
+          document.getElementById('outputSection').classList.remove('hidden');
+          toggleHistory();
+          document.getElementById('outputSection').scrollIntoView({ behavior: 'smooth' });
+        }
+      } catch (e) {
+        showStatus('error', 'فشل في تحميل العنصر');
+      }
+    }
+
+    function clearHistory() {
+      if (confirm('هل أنت متأكد من مسح جميع السجلات؟')) {
+        localStorage.removeItem('promptHistory');
+        renderHistory();
+        showStatus('success', 'تم مسح السجل');
+      }
+    }
+
+    function toggleHistory() {
+      const panel = document.getElementById('historyPanel');
+      const overlay = document.getElementById('historyOverlay');
+      panel.classList.toggle('open');
+      overlay.classList.toggle('show');
+    }
+
+    // =====================================================
+    // UTILITY FUNCTIONS
+    // =====================================================
+    function resetForm() {
+      if (confirm('هل تريد بدء نموذج جديد؟ سيتم مسح جميع البيانات الحالية.')) {
+        localStorage.removeItem('brochurePromptData');
+        location.reload();
+      }
+    }
+
+    function showStatus(type, message) {
+      const status = document.getElementById('copyStatus');
+      status.className = `status-message status-${type}`;
+      status.textContent = message;
+      
+      // Auto-hide after 4 seconds
+      setTimeout(() => {
+        status.className = 'status-message';
+      }, 4000);
+    }
+
+    function escapeHtml(text) {
+      const div = document.createElement('div');
+      div.textContent = text;
+      return div.innerHTML;
+    }
+
+    // Add fadeOut animation
+    const style = document.createElement('style');
+    style.textContent = `
+      @keyframes fadeOut {
+        from { opacity: 1; transform: translateX(0); }
+        to { opacity: 0; transform: translateX(-20px); }
+      }
+    `;
+    document.head.appendChild(style);
   </script>
 
 </body>
