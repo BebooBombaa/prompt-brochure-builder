@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>مولّد برومبت البروشور 3D المحسَّن</title>
+  <title>مولّد برومبت البروشور 3D</title>
   <style>
     /* ====== CSS Variables & Design Tokens ====== */
     :root {
@@ -593,6 +593,25 @@
       50% { opacity: 0.4; }
     }
 
+    /* ====== Info Box ====== */
+    .info-box {
+      background: rgba(245, 158, 11, 0.1);
+      border: 1px solid rgba(245, 158, 11, 0.3);
+      border-radius: 8px;
+      padding: 12px 16px;
+      margin-bottom: 16px;
+      font-size: 14px;
+      color: #fbbf24;
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+    }
+
+    .info-box-icon {
+      font-size: 20px;
+      flex-shrink: 0;
+    }
+
     /* ====== Responsive Design ====== */
     @media (max-width: 768px) {
       .header h1 {
@@ -653,8 +672,8 @@
 
   <!-- Header -->
   <header class="header">
-    <h1>🎨 مولّد برومبت البروشور 3D المحسَّن</h1>
-    <p>أنشئ برومبت احترافي لتوليد بروشورات 3D تعليمية مذهلة</p>
+    <h1>🎨 مولد برومبت البروشور ثلاثي الابعاد</h1>
+    <p>انشئ برومبت احترالي لتوليد بروشورات تعليمية ثلاثية الابعاد مذهلة</p>
   </header>
 
   <!-- Progress Bar -->
@@ -675,7 +694,7 @@
       </div>
       <div class="step" data-step="4" onclick="goToStep(4)">
         <div class="step-number">4</div>
-        <div class="step-label">الأمثلة</div>
+        <div class="step-label">الامثلة</div>
       </div>
       <div class="step" data-step="5" onclick="goToStep(5)">
         <div class="step-number">5</div>
@@ -695,9 +714,15 @@
     <section class="panel" id="step1">
       <h2>المعلومات العامة</h2>
       
+      <!-- Important Note -->
+      <div class="info-box">
+        <span class="info-box-icon">💡</span>
+        <span><strong>ملاحظة مهمة:</strong> اكتب النصوص العربية بدون تشكيل للحصول على أفضل نتائج مع مولدات الصور الذكية.</span>
+      </div>
+      
       <!-- Templates -->
       <div class="form-group">
-        <label>🎯 اختر قالباً جاهزاً (اختياري)</label>
+        <label>🎯 اختر قالبا جاهزا (اختياري)</label>
         <div class="templates-grid">
           <div class="template-card" onclick="loadTemplate('networks')">
             <div class="template-icon">🌐</div>
@@ -717,21 +742,21 @@
           <div class="template-card" onclick="loadTemplate('empty')">
             <div class="template-icon">✨</div>
             <div class="template-name">فارغ</div>
-            <div class="template-desc">ابدأ من الصفر</div>
+            <div class="template-desc">ابدا من الصفر</div>
           </div>
         </div>
       </div>
 
       <div class="form-group">
         <label for="topic">عنوان الموضوع *</label>
-        <input type="text" id="topic" placeholder="مثال: شبكات الحاسب الآلي للصف الأول الثانوي">
+        <input type="text" id="topic" placeholder="مثال: شبكات الحاسب الالي للصف الاول الثانوي">
       </div>
 
       <div class="form-group">
         <label for="audience">الفئة المستهدفة *</label>
         <select id="audience">
           <option value="students">طلاب مدرسيون</option>
-          <option value="children">أطفال</option>
+          <option value="children">اطفال</option>
           <option value="professionals">محترفون</option>
           <option value="general">جمهور عام</option>
         </select>
@@ -746,9 +771,14 @@
     <section class="panel hidden" id="step2">
       <h2>لوحة الغلاف والمقدمة</h2>
       
+      <div class="info-box">
+        <span class="info-box-icon">📝</span>
+        <span>اكتب النصوص العربية بشكل واضح وبسيط بدون اي علامات تشكيل.</span>
+      </div>
+      
       <div class="form-group">
         <label for="p1_title">العنوان الرئيسي بالعربية *</label>
-        <input type="text" id="p1_title" placeholder="مع التشكيل إن أمكن">
+        <input type="text" id="p1_title" placeholder="اكتب العنوان الرئيسي هنا">
       </div>
 
       <div class="form-group">
@@ -758,11 +788,11 @@
 
       <div class="form-group">
         <label for="p1_intro">فقرة المقدمة *</label>
-        <textarea id="p1_intro" placeholder="شرح قصير للموضوع (3-5 أسطر)"></textarea>
+        <textarea id="p1_intro" placeholder="اكتب شرحا قصيرا للموضوع من 3 الى 5 اسطر"></textarea>
       </div>
 
       <div class="form-group">
-        <label for="p1_caption">تعليق صورة الغلاف (Caption)</label>
+        <label for="p1_caption">تعليق صورة الغلاف</label>
         <textarea id="p1_caption" placeholder="وصف قصير تحت الصورة الرئيسية"></textarea>
       </div>
 
@@ -775,14 +805,14 @@
     <!-- Step 3: Concepts -->
     <section class="panel hidden" id="step3">
       <h2>لوحة المفاهيم الرئيسية</h2>
-      <p style="color: var(--text-secondary); margin-bottom: 16px;">أضف المفاهيم الأساسية (يُنصح بـ 2-3 مفاهيم)</p>
+      <p style="color: var(--text-secondary); margin-bottom: 16px;">اضف المفاهيم الاساسية (ينصح بـ 2 الى 3 مفاهيم)</p>
       
       <div id="conceptsContainer">
         <!-- Concepts will be added here dynamically -->
       </div>
 
       <button class="btn-add" onclick="addConcept()">
-        <span>➕</span> إضافة مفهوم جديد
+        <span>➕</span> اضافة مفهوم جديد
       </button>
 
       <div class="btn-group">
@@ -793,9 +823,9 @@
 
     <!-- Step 4: Examples -->
     <section class="panel hidden" id="step4">
-      <h2>لوحة الأمثلة والشروح المرئية</h2>
+      <h2>لوحة الامثلة والشروح المرئية</h2>
       <p style="color: var(--text-secondary); margin-bottom: 16px;">
-        💡 اكتب وصف المشهد بالإنجليزية لمساعدة نموذج توليد الصور
+        💡 اكتب وصف المشهد بالانجليزية لمساعدة نموذج توليد الصور على فهم المشهد المطلوب
       </p>
       
       <div id="examplesContainer">
@@ -803,7 +833,7 @@
       </div>
 
       <button class="btn-add" onclick="addExample()">
-        <span>➕</span> إضافة مثال جديد
+        <span>➕</span> اضافة مثال جديد
       </button>
 
       <div class="btn-group">
@@ -818,7 +848,7 @@
       
       <div class="form-group">
         <label for="p4_heading">عنوان قسم الملخص *</label>
-        <input type="text" id="p4_heading" placeholder="مثال: أهم النقاط المستفادة">
+        <input type="text" id="p4_heading" placeholder="مثال: اهم النقاط المستفادة">
       </div>
 
       <div id="bulletsContainer">
@@ -826,7 +856,7 @@
       </div>
 
       <button class="btn-add" onclick="addBullet()">
-        <span>➕</span> إضافة نقطة جديدة
+        <span>➕</span> اضافة نقطة جديدة
       </button>
 
       <div class="btn-group">
@@ -845,8 +875,8 @@
       </div>
 
       <div class="form-group">
-        <label for="style_notes">ملاحظات إضافية على التصميم <span class="optional">(اختياري)</span></label>
-        <textarea id="style_notes" placeholder="أي تعليمات إضافية لمولد الصور..."></textarea>
+        <label for="style_notes">ملاحظات اضافية على التصميم <span class="optional">(اختياري)</span></label>
+        <textarea id="style_notes" placeholder="اي تعليمات اضافية لمولد الصور..."></textarea>
       </div>
 
       <div class="btn-group">
@@ -882,7 +912,7 @@
   <!-- Auto-save Indicator -->
   <div class="auto-save-indicator" id="autoSaveIndicator">
     <div class="save-dot"></div>
-    <span>جارِ الحفظ التلقائي...</span>
+    <span>جار الحفظ التلقائي...</span>
   </div>
 
   <!-- History Toggle Button -->
@@ -912,69 +942,69 @@
     
     // Auto-save debounce timer
     let autoSaveTimer = null;
-    const AUTO_SAVE_DELAY = 1000; // 1 second
+    const AUTO_SAVE_DELAY = 1000;
 
     // =====================================================
-    // TEMPLATES DATA
+    // TEMPLATES DATA (بدون تشكيل)
     // =====================================================
     const templates = {
       networks: {
-        topic: 'شَبَكَاتُ الْحَاسِبِ الآلِيِّ لِلصَّفِّ الْأَوَّلِ الثَّانَوِيِّ',
+        topic: 'شبكات الحاسب الالي للصف الاول الثانوي',
         audience: 'students',
-        p1_title: 'شَبَكَاتُ الْحَاسِبِ الآلِيِّ',
+        p1_title: 'شبكات الحاسب الالي',
         p1_subtitle: 'دليلك الشامل لفهم عالم الاتصالات الرقمية',
-        p1_intro: 'تُعَدُّ الشبكات العمود الفقري للعصر الرقمي، حيث تُمكِّن الأجهزة من التواصل ومشاركة الموارد. في هذا البروشور، سنتعرف على أساسيات الشبكات وأنواعها ومكوناتها بطريقة مبسطة ومرئية.',
-        p1_caption: 'شبكة حاسوبية تربط بين عدة أجهزة في بيئة تعليمية',
+        p1_intro: 'تعد الشبكات العمود الفقري للعصر الرقمي، حيث تمكن الاجهزة من التواصل ومشاركة الموارد. في هذا البروشور، سنتعرف على اساسيات الشبكات وانواعها ومكوناتها بطريقة مبسطة ومرئية.',
+        p1_caption: 'شبكة حاسوبية تربط بين عدة اجهزة في بيئة تعليمية',
         concepts: [
-          { title: 'مَفْهُومُ الشَّبَكَةِ', desc: 'هي مجموعة من الأجهزة المرتبطة ببعضها البعض لمشاركة الموارد والمعلومات مثل الطابعات والملفات واتصال الإنترنت.' },
-          { title: 'أَنْوَاعُ الشَّبَكَاتِ', desc: 'تشمل LAN (شبكة محلية) و WAN (شبكة واسعة) و MAN (شبكة مدينة)، ولكل نوع نطاق واستخدام خاص.' },
-          { title: 'مُكَوِّنَاتُ الشَّبَكَةِ', desc: 'تشمل أجهزة مثل الراوتر والسويتش والكابل، بالإضافة إلى بروتوكولات الاتصال التي تنظم نقل البيانات.' }
+          { title: 'مفهوم الشبكة', desc: 'هي مجموعة من الاجهزة المرتبطة ببعضها البعض لمشاركة الموارد والمعلومات مثل الطابعات والملفات واتصال الانترنت.' },
+          { title: 'انواع الشبكات', desc: 'تشمل LAN وهي الشبكة المحلية و WAN وهي الشبكة الواسعة و MAN وهي شبكة المدينة، ولكل نوع نطاق واستخدام خاص.' },
+          { title: 'مكونات الشبكة', desc: 'تشمل اجهزة مثل الراوتر والسويتش والكابل، بالإضافة الى بروتوكولات الاتصال التي تنظم نقل البيانات.' }
         ],
         examples: [
-          { title: 'شبكة مدرسية', visual: 'A modern classroom with computers connected by visible network cables, showing a central server cabinet, 3D isometric view, bright educational environment', caption: 'مثال على شبكة محلية (LAN) في مدرسة' },
-          { title: 'الإنترنت العالمي', visual: 'Earth globe surrounded by glowing network nodes and connection lines, satellites in orbit, data streams visualization, futuristic 3D style', caption: 'تمثيل مرئي للإنترنت كشبكة عالمية' }
+          { title: 'شبكة مدرسية', visual: 'A modern classroom with computers connected by visible network cables, showing a central server cabinet, 3D isometric view, bright educational environment', caption: 'مثال على شبكة محلية في مدرسة' },
+          { title: 'الانترنت العالمي', visual: 'Earth globe surrounded by glowing network nodes and connection lines, satellites in orbit, data streams visualization, futuristic 3D style', caption: 'تمثيل مرئي للانترنت كشبكة عالمية' }
         ],
-        p4_heading: 'أَهَمُّ النِّقَاطِ الْمُسْتَفَادَةِ',
-        bullets: ['الشبكات تُمكِّن من مشاركة الموارد والبيانات بين الأجهزة', 'تختلف أنواع الشبكات حسب المساحة والتغطية', 'فهم أساسيات الشبكات ضروري في العصر الرقمي'],
+        p4_heading: 'اهم النقاط المستفادة',
+        bullets: ['الشبكات تمكن من مشاركة الموارد والبيانات بين الاجهزة', 'تختلف انواع الشبكات حسب المساحة والتغطية', 'فهم اساسيات الشبكات ضروري في العصر الرقمي'],
         signature: 'فريق التعليم التقني'
       },
       science: {
-        topic: 'التَحَوُّلاَتُ الكِيمْيَائِيَّةُ',
+        topic: 'التحولات الكيميائية',
         audience: 'students',
-        p1_title: 'التَحَوُّلاَتُ الكِيمْيَائِيَّةُ',
+        p1_title: 'التحولات الكيميائية',
         p1_subtitle: 'رحلة مثيرة في عالم الذرات والجزيئات',
-        p1_intro: 'التحولات الكيميائية هي عمليات تُغيِّر تركيب المادة وتُنتج مواد جديدة بخصائص مختلفة. سنستكشف معاً أنواع هذه التحولات ودلائل حدوثها في حياتنا اليومية.',
+        p1_intro: 'التحولات الكيميائية هي عمليات تغير تركيب المادة وتنتج مواد جديدة بخصائص مختلفة. سنستكشف معاً انواع هذه التحولات ودلائل حدوثها في حياتنا اليومية.',
         p1_caption: 'تفاعل كيميائي ينتج عنه تغير في اللون والحرارة',
         concepts: [
-          { title: 'مَا هِيَ التَّحَوُّلاَتُ الكِيمْيَائِيَّةُ؟', desc: 'هي عمليات تُؤدي إلى تكوين مواد جديدة ذات خصائص مختلفة عن المواد الأصلية، ولا يمكن عكسها بسهولة.' },
-          { title: 'دَلاَئِلُ وُقُوعِ التَّحَوُّلِ', desc: 'تغير اللون، انبعاث غاز، تكون راسب، تغير في الحرارة (امتصاص أو انطلاق طاقة).' },
-          { title: 'أَمْثِلَةٌ يَوْمِيَّةٌ', desc: 'صدأ الحديد، احتراق الخشب، هضم الطعام، تفاعل الخل مع بيكربونات الصوديوم.' }
+          { title: 'ما هي التحولات الكيميائية', desc: 'هي عمليات تؤدي الى تكوين مواد جديدة ذات خصائص مختلفة عن المواد الاصلية، ولا يمكن عكسها بسهولة.' },
+          { title: 'دلائل وقوع التحول', desc: 'تغير اللون، انبعاث غاز، تكون راسب، تغير في الحرارة سواء امتصاص او انطلاق طاقة.' },
+          { title: 'امثلة يومية', desc: 'صدأ الحديد، احتراق الخشب، هضم الطعام، تفاعل الخل مع بيكربونات الصوديوم.' }
         ],
         examples: [
-          { title: 'تفاعل الاحتراق', visual: 'Colorful chemical reaction in a laboratory flask, bubbles forming, color change from blue to red, 3D molecular visualization overlay, bright lighting', caption: 'تفاعل كيمياسي يُظهر تغيراً واضحاً في اللون' }
+          { title: 'تفاعل الاحتراق', visual: 'Colorful chemical reaction in a laboratory flask, bubbles forming, color change from blue to red, 3D molecular visualization overlay, bright lighting', caption: 'تفاعل كيميائي يظهر تغيرا واضحا في اللون' }
         ],
         p4_heading: 'الخلاصة',
-        bullets: ['التحولات الكيميائية تُنتج مواد جديدة تماماً', 'exist multiple indicators to identify chemical changes', 'التحولات الكيميائية تختلف عن التحولات الفيزيائية'],
+        bullets: ['التحولات الكيميائية تنتج مواد جديدة تماما', 'توجد مؤشرات متعددة للتعرف على التحولات الكيميائية', 'التحولات الكيميائية تختلف عن التحولات الفيزيائية'],
         signature: 'معمل العلوم التفاعلي'
       },
       math: {
-        topic: 'النِّسْبَةُ الْمُتَنَاسَبَةُ فِي الْهِنْدَسَةِ',
+        topic: 'النسبة المتناسبة في الهندسة',
         audience: 'students',
-        p1_title: 'النِّسْبَةُ الْمُتَنَاسَبَةُ',
+        p1_title: 'النسبة المتناسبة',
         p1_subtitle: 'جمال الرياضيات في التصميم والفن',
-        p1_intro: 'النسبة المتناسبة (Golden Ratio) هي نسبة رياضية موجودة في الطبيعة والفن والهندسة منذ آلاف السنين. تُقدَّر بحوالي 1.618 وتُعتبر رمزاً للجمال والتناغم البصري.',
-        p1_caption: 'مستطيل ذهبي يُظهر النسبة المتناسبة في الطبيعة',
+        p1_intro: 'النسبة المتناسبة هي نسبة رياضية موجودة في الطبيعة والفن والهندسة منذ آلاف السنين. تقدر بحوالي 1.618 وتعتبر رمزا للجمال والتناغم البصري.',
+        p1_caption: 'مستطيل ذهبي يظهر النسبة المتناسبة في الطبيعة',
         concepts: [
-          { title: 'تَعْرِيفُ النِّسْبَةِ الْمُتَنَاسَبَةِ', desc: 'نسبة بين جزئين حيث يكون مجموعهما إلى الجزء الأكبر كما هو الأكبر إلى الأصغر، وقيمتها التقريبية φ ≈ 1.618.' },
-          { title: 'وُجُودُهَا فِي الطَّبِيعَةِ', desc: 'تظهر في أصداف البحر، أوراق الشمسية، دوامات الماء، ترتيب بذور الأزهار، وحتى في جسم الإنسان.' },
-          { title: 'تَطْبِيقَاتُهَا الْهِنْدَسِيَّةُ', desc: 'استخدمها اليونانيون في بناء الأهرامات والبارثينون، وما زالت تُستخدم في التصميم الحديث والعمارة.' }
+          { title: 'تعريف النسبة المتناسبة', desc: 'نسبة بين جزئين يكون مجموعهما الى الجزء الاكبر كما هو الاكبر الى الاصغر، وقيمتها التقريبية حوالي 1.618.' },
+          { title: 'وجودها في الطبيعة', desc: 'تظهر في اصداف البحر، اوراق الشمسية، دوامات الماء، ترتيب بذور الازهار، وحتى في جسم الانسان.' },
+          { title: 'تطبيقاتها الهندسية', desc: 'استخدمها اليونانيون في بناء الاهرامات والبارثينون، وما زالت تستخدم في التصميم الحديث والعمارة.' }
         ],
         examples: [
           { title: 'اللولب الذهبي', visual: 'Golden spiral Fibonacci sequence in 3D, nautilus shell cross-section with mathematical grid overlay, glowing golden lines on dark background, educational diagram style', caption: 'اللولب الذهبي في صدفة البحر الطبيعية' },
-          { title: 'الوجه الإنساني', visual: 'Human face with golden ratio proportions marked, architectural blueprint style overlay showing measurements, classical sculpture aesthetic, soft lighting', caption: 'تطبيق النسبة الذهبية في نسب الوجه الإنساني' }
+          { title: 'وجه الانسان', visual: 'Human face with golden ratio proportions marked, architectural blueprint style overlay showing measurements, classical sculpture aesthetic, soft lighting', caption: 'تطبيق النسبة الذهبية في نسب وجه الانسان' }
         ],
         p4_heading: 'ما تعلمناه اليوم',
-        bullets: ['النسبة المتناسبة تساوي تقريباً 1.618', 'توجد في الطبيعة والفن والعمارة', 'تُضفي جمالاً وتناغماً على التصاميم'],
+        bullets: ['النسبة المتناسبة تساوي تقريبا 1.618', 'توجد في الطبيعة والفن والعمارة', 'تضفي جمالا وتناغما على التصاميم'],
         signature: 'قسم الرياضيات التطبيقية'
       },
       empty: {
@@ -996,24 +1026,15 @@
     // INITIALIZATION
     // =====================================================
     document.addEventListener('DOMContentLoaded', function() {
-      // Initialize dynamic sections
       addConcept();
       addConcept();
       addExample();
       addBullet();
       addBullet();
       addBullet();
-
-      // Load saved data
       loadFromLocalStorage();
-
-      // Setup auto-save listeners
       setupAutoSave();
-
-      // Load history
       renderHistory();
-
-      // Update progress
       updateProgress();
     });
 
@@ -1022,33 +1043,18 @@
     // =====================================================
     function goToStep(step) {
       if (step < 1 || step > totalSteps) return;
-
-      // Hide current step
       document.getElementById(`step${currentStep}`).classList.add('hidden');
-      
-      // Remove active class from current step
       document.querySelector(`.step[data-step="${currentStep}"]`).classList.remove('active');
-
-      // Show new step
       currentStep = step;
       document.getElementById(`step${currentStep}`).classList.remove('hidden');
-      
-      // Add active class to new step
       document.querySelector(`.step[data-step="${currentStep}"]`).classList.add('active');
-
-      // Update progress bar
       updateProgress();
-
-      // Scroll to top of panel
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
     function nextStep() {
-      if (currentStep < totalSteps) {
-        // Validate current step before proceeding
-        if (validateStep(currentStep)) {
-          goToStep(currentStep + 1);
-        }
+      if (currentStep < totalSteps && validateStep(currentStep)) {
+        goToStep(currentStep + 1);
       }
     }
 
@@ -1062,8 +1068,6 @@
       const progressLine = document.getElementById('progressLine');
       const percentage = ((currentStep - 1) / (totalSteps - 1)) * 100;
       progressLine.style.width = `${percentage}%`;
-
-      // Update step classes
       for (let i = 1; i <= totalSteps; i++) {
         const stepEl = document.querySelector(`.step[data-step="${i}"]`);
         stepEl.classList.remove('completed');
@@ -1081,7 +1085,7 @@
         case 1:
           const topic = document.getElementById('topic').value.trim();
           if (!topic) {
-            showStatus('error', 'الرجاء إدخال عنوان الموضوع');
+            showStatus('error', 'الرجاء ادخال عنوان الموضوع');
             return false;
           }
           return true;
@@ -1089,7 +1093,7 @@
           const title = document.getElementById('p1_title').value.trim();
           const intro = document.getElementById('p1_intro').value.trim();
           if (!title || !intro) {
-            showStatus('error', 'الرجاء إدخال العنوان الرئيسي والمقدمة');
+            showStatus('error', 'الرجاء ادخال العنوان الرئيسي والمقدمة');
             return false;
           }
           return true;
@@ -1141,11 +1145,11 @@
           <input type="text" id="e${exampleCount}_title" placeholder="عنوان المثال">
         </div>
         <div class="form-group">
-          <label>وصف المشهد بالإنجليزية * <span style="color: var(--accent-secondary);">(للموديل)</span></label>
+          <label>وصف المشهد بالانجليزية * <span style="color: var(--accent-secondary);">(للموديل)</span></label>
           <textarea id="e${exampleCount}_visual" placeholder="Describe the 3D scene in English for AI image generation..."></textarea>
         </div>
         <div class="form-group">
-          <label>التعليق بالعربية (Caption) *</label>
+          <label>التعليق بالعربية *</label>
           <textarea id="e${exampleCount}_caption" placeholder="تعليق توضيحي تحت الصورة"></textarea>
         </div>
       `;
@@ -1190,7 +1194,6 @@
       const template = templates[templateKey];
       if (!template) return;
 
-      // Fill form fields
       document.getElementById('topic').value = template.topic;
       document.getElementById('audience').value = template.audience;
       document.getElementById('p1_title').value = template.p1_title;
@@ -1200,7 +1203,6 @@
       document.getElementById('p4_heading').value = template.p4_heading;
       document.getElementById('signature').value = template.signature;
 
-      // Clear and reload concepts
       const conceptsContainer = document.getElementById('conceptsContainer');
       conceptsContainer.innerHTML = '';
       conceptCount = 0;
@@ -1211,7 +1213,6 @@
         document.getElementById(`c${index + 1}_desc`).value = concept.desc;
       });
 
-      // Clear and reload examples
       const examplesContainer = document.getElementById('examplesContainer');
       examplesContainer.innerHTML = '';
       exampleCount = 0;
@@ -1223,7 +1224,6 @@
         document.getElementById(`e${index + 1}_caption`).value = example.caption;
       });
 
-      // Clear and reload bullets
       const bulletsContainer = document.getElementById('bulletsContainer');
       bulletsContainer.innerHTML = '';
       bulletCount = 0;
@@ -1234,41 +1234,35 @@
       });
 
       triggerAutoSave();
-      showStatus('success', 'تم تحميل القالب بنجاح! ✓');
+      showStatus('success', 'تم تحميل القالب بنجاح');
     }
 
     // =====================================================
-    // PROMPT GENERATION
+    // PROMPT GENERATION (بدون طلب التشكيل)
     // =====================================================
     function generatePrompt() {
-      // Collect all form data
       const data = collectFormData();
 
-      // Validate required fields
       if (!data.topic || !data.p1_title || !data.p1_intro) {
-        showStatus('error', 'يرجى ملء الحقول المطلوبة في الخطوات الأولى');
+        showStatus('error', 'يرجى ملء الحقول المطلوبة في الخطوات الاولى');
         goToStep(1);
         return;
       }
 
-      // Build concepts text
       let conceptsText = data.concepts.map((c, i) => 
         `${i+1}) Concept\n- Arabic title:\n  "${c.title}"\n- Arabic description:\n  "${c.desc}"\n`
       ).join('\n');
 
-      // Build examples text
       let examplesText = data.examples.map((e, i) =>
         `Example ${i+1}:\n- Arabic example title:\n  "${e.title}"\n- 3D scene description:\n  ${e.visual}\n- Arabic caption:\n  "${e.caption}"\n`
       ).join('\n');
 
-      // Build bullets text
       let bulletsText = data.bullets.map(b => `  - "${b}"\n`).join('');
 
-      // Build style notes
       const styleNotes = document.getElementById('style_notes').value.trim();
       const styleSection = styleNotes ? `\n\nADDITIONAL STYLE INSTRUCTIONS:\n${styleNotes}` : '';
 
-      // Generate final prompt
+      // البرومبت النهائي - معدل بدون ذكر التشكيل
       const prompt = `Act as a top-tier prompt engineer and 3D infographic designer.
 
 TASK:
@@ -1276,8 +1270,9 @@ Create a 3D tri-fold (four-panel) infographic brochure with a modern, immersive,
 "${data.topic}".
 
 LANGUAGE & TEXT:
-- All written content on the brochure must be in formal Arabic (الفصحى) with full diacritics.
+- All written content on the brochure must be in clear, formal Arabic language.
 - Use the exact Arabic text provided for each panel below and render it clearly and beautifully.
+- IMPORTANT: Do NOT use any diacritics (tashkeel/harakat) on the Arabic text. Use plain Arabic letters only for best rendering results.
 
 DESIGN STYLE:
 - Use a dark base background (deep navy blue blended with dark grey).
@@ -1304,38 +1299,33 @@ PANEL 1: COVER / INTRODUCTION
 PANEL 2: MAIN CONCEPTS
 Create a clean layout with small section headings and short Arabic explanations. For each concept:
 
- ${conceptsText}
+${conceptsText}
 PANEL 3: EXAMPLES & VISUAL EXPLANATIONS
 Use practical visual scenes to illustrate the topic. For each example, create a 3D scene and place the Arabic caption under the image:
 
- ${examplesText}
+${examplesText}
 PANEL 4: SUMMARY / KEY TAKEAWAYS
 - Arabic heading:
   "${data.p4_heading}"
 - Bulleted Arabic summary points:
- ${bulletsText}
+${bulletsText}
 SIGNATURE:
 - At the bottom of the back panel, add a decorative Arabic signature:
   "${data.signature}"
 - Style: elegant Arabic calligraphy matching the brochure's colors.
- ${styleSection}
+${styleSection}
 
 OUTPUT:
 - High-resolution 3D image.
 - 3D perspective showing the tri-fold brochure with all four panels visible.
 - Maintain consistent lighting, colors, and Pixar-style 3D characters across all panels.`;
 
-      // Display result
       document.getElementById('promptResult').value = prompt;
       document.getElementById('outputSection').classList.remove('hidden');
       
-      // Save to history
       saveToHistory(data.topic, prompt);
-
-      // Scroll to output
       document.getElementById('outputSection').scrollIntoView({ behavior: 'smooth' });
-      
-      showStatus('success', 'تم توليد البرومبت بنجاح! 🎉');
+      showStatus('success', 'تم توليد البرومبت بنجاح');
     }
 
     function collectFormData() {
@@ -1353,7 +1343,6 @@ OUTPUT:
         bullets: []
       };
 
-      // Collect concepts
       for (let i = 1; i <= conceptCount; i++) {
         const title = document.getElementById(`c${i}_title`);
         const desc = document.getElementById(`c${i}_desc`);
@@ -1362,7 +1351,6 @@ OUTPUT:
         }
       }
 
-      // Collect examples
       for (let i = 1; i <= exampleCount; i++) {
         const title = document.getElementById(`e${i}_title`);
         const visual = document.getElementById(`e${i}_visual`);
@@ -1376,7 +1364,6 @@ OUTPUT:
         }
       }
 
-      // Collect bullets
       for (let i = 1; i <= bulletCount; i++) {
         const bullet = document.getElementById(`b${i}`);
         if (bullet && bullet.value.trim()) {
@@ -1401,12 +1388,11 @@ OUTPUT:
 
       try {
         await navigator.clipboard.writeText(text);
-        showStatus('success', 'تم النسخ إلى الحافظة! ✓');
+        showStatus('success', 'تم النسخ إلى الحافظة');
       } catch (err) {
-        // Fallback for older browsers
         textarea.select();
         document.execCommand('copy');
-        showStatus('info', 'تم النسخ! (طريقة بديلة)');
+        showStatus('info', 'تم النسخ بنجاح');
       }
     }
 
@@ -1427,7 +1413,7 @@ OUTPUT:
       document.body.removeChild(a);
       URL.revokeObjectURL(url);
       
-      showStatus('success', 'تم تحميل الملف! 💾');
+      showStatus('success', 'تم تحميل الملف بنجاح');
     }
 
     // =====================================================
@@ -1436,24 +1422,16 @@ OUTPUT:
     function setupAutoSave() {
       const inputs = document.querySelectorAll('input, textarea, select');
       inputs.forEach(input => {
-        input.addEventListener('input', () => {
-          debounceAutoSave();
-        });
-        input.addEventListener('change', () => {
-          triggerAutoSave();
-        });
+        input.addEventListener('input', () => debounceAutoSave());
+        input.addEventListener('change', () => triggerAutoSave());
       });
     }
 
     function setupAutoSaveForElement(element) {
       const inputs = element.querySelectorAll('input, textarea');
       inputs.forEach(input => {
-        input.addEventListener('input', () => {
-          debounceAutoSave();
-        });
-        input.addEventListener('change', () => {
-          triggerAutoSave();
-        });
+        input.addEventListener('input', () => debounceAutoSave());
+        input.addEventListener('change', () => triggerAutoSave());
       });
     }
 
@@ -1466,7 +1444,6 @@ OUTPUT:
       const indicator = document.getElementById('autoSaveIndicator');
       indicator.classList.add('show');
       
-      // Save all form data
       const formData = {
         currentStep: currentStep,
         conceptCount: conceptCount,
@@ -1475,7 +1452,6 @@ OUTPUT:
         fields: {}
       };
 
-      // Collect all field values
       const inputs = document.querySelectorAll('input, textarea, select');
       inputs.forEach(input => {
         if (input.id) {
@@ -1500,7 +1476,6 @@ OUTPUT:
         if (saved) {
           const formData = JSON.parse(saved);
           
-          // Restore fields
           if (formData.fields) {
             Object.keys(formData.fields).forEach(id => {
               const element = document.getElementById(id);
@@ -1510,7 +1485,6 @@ OUTPUT:
             });
           }
 
-          // Restore counts and rebuild dynamic elements if needed
           if (formData.conceptCount && formData.conceptCount > 2) {
             for (let i = 3; i <= formData.conceptCount; i++) {
               addConcept();
@@ -1526,8 +1500,6 @@ OUTPUT:
               addBullet();
             }
           }
-
-          showStatus('info', 'تم استعادة البيانات المحفوظة');
         }
       } catch (e) {
         console.warn('Failed to load saved data:', e);
@@ -1541,7 +1513,6 @@ OUTPUT:
       try {
         let history = JSON.parse(localStorage.getItem('promptHistory') || '[]');
         
-        // Add new entry at the beginning
         history.unshift({
           id: Date.now(),
           title: title || 'بدون عنوان',
@@ -1549,7 +1520,6 @@ OUTPUT:
           date: new Date().toLocaleString('ar-EG')
         });
 
-        // Keep only last 20 entries
         if (history.length > 20) {
           history = history.slice(0, 20);
         }
@@ -1599,7 +1569,7 @@ OUTPUT:
     }
 
     function clearHistory() {
-      if (confirm('هل أنت متأكد من مسح جميع السجلات؟')) {
+      if (confirm('هل انت متأكد من مسح جميع السجلات؟')) {
         localStorage.removeItem('promptHistory');
         renderHistory();
         showStatus('success', 'تم مسح السجل');
@@ -1628,7 +1598,6 @@ OUTPUT:
       status.className = `status-message status-${type}`;
       status.textContent = message;
       
-      // Auto-hide after 4 seconds
       setTimeout(() => {
         status.className = 'status-message';
       }, 4000);
